@@ -1,0 +1,43 @@
+.addTaskDilogContainer{
+
+    .addTaskDilog{
+
+        font-family: Raleway;
+
+        .dialogTitle{
+            padding: 8px;
+            font-size: 14px;
+            border-bottom: 1px solid black;
+            font-weight: 500;
+        }
+
+        .dialogBody{
+
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+
+         
+            p{
+                font-size: 12px;
+            }
+        
+            .newTaskInput{
+                
+                width: auto;
+                height: 30px;
+                border: 1px solid rgba(0, 0, 0, 0.236);
+                padding: 0px 5px 0px 5px;
+            }
+
+        }
+    
+    }
+
+    .dialogButton{
+        color: black;
+        border-color: black;
+        font-size: 12px;
+    }
+
+}

@@ -1,0 +1,39 @@
+.filterDilogContainer{
+
+    .filterDilog{
+
+        font-family: Raleway;
+
+        .dialogTitle{
+            padding: 8px;
+            font-size: 14px;
+            border-bottom: 1px solid black;
+            font-weight: 500;
+        }
+
+        .dialogBody{
+
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+         
+            p{
+                font-size: 12px;
+            }
+        
+            .input{
+                
+            }
+
+        }
+    
+    }
+
+    .dialogButton{
+        color: black;
+        border-color: black;
+        font-size: 12px;
+    }
+
+}
