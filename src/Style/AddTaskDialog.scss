@@ -1,13 +1,17 @@
+@import 'Variables';
+
 .addTaskDilogContainer{
 
     .addTaskDilog{
 
         font-family: Raleway;
+        background-color: $main-body-background-color;
+        color: $widget-body-font-color;
 
         .dialogTitle{
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid $widget-body-font-color;
             font-weight: 500;
         }
 
@@ -26,18 +30,27 @@
                 
                 width: auto;
                 height: 30px;
-                border: 1px solid rgba(0, 0, 0, 0.236);
+                border: 1px solid $widget-body-font-color;
                 padding: 0px 5px 0px 5px;
+                background-color: $widget-body-background-color;
+                color: $widget-body-font-color;
             }
 
         }
     
     }
 
-    .dialogButton{
-        color: black;
-        border-color: black;
-        font-size: 12px;
+    .dialogAction{
+        background-color: $main-body-background-color;
+        
+        .dialogButton{
+            color: $widget-body-font-color;
+            border-color: $widget-body-font-color;
+            font-size: 12px;
+            padding: 0px 20px 0px 20px;
+
+        }
+
     }
 
 }

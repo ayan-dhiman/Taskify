@@ -1,3 +1,5 @@
+@import 'Variables';
+
 .filterDilogContainer{
 
     .filterDilog{
@@ -7,7 +9,7 @@
         .dialogTitle{
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid $widget-body-font-color;
             font-weight: 500;
         }
 
@@ -31,8 +33,8 @@
     }
 
     .dialogButton{
-        color: black;
-        border-color: black;
+        color: $widget-body-font-color;
+        border-color: $widget-body-font-color;
         font-size: 12px;
     }
 

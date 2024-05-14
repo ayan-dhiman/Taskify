@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import '../../Style/AddTaskDialog.scss';
 
 function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }) {
+
     return (
         <Dialog
             open={open}
@@ -32,11 +33,11 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }
 
             </div>
 
-            <DialogActions>
-                <Button autoFocus onClick={handleClose} className='dialogButton' >
+            <DialogActions className='dialogAction' >
+                <Button variant="outlined" autoFocus onClick={handleClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button onClick={handleAddTask} className='dialogButton' >Add Task</Button>
+                <Button variant="outlined" onClick={handleAddTask} className='dialogButton' >Add Task</Button>
             </DialogActions>
         </Dialog>
     );

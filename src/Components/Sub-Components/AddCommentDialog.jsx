@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+import React from 'react';
+import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
 
 function AddCommentDialog({ openCommentDialog, handleCommentDialogClose, handleAddComment, newComment, setNewComment }) {
@@ -32,11 +32,11 @@ function AddCommentDialog({ openCommentDialog, handleCommentDialogClose, handleA
 
             </div>
 
-            <DialogActions>
-                <Button autoFocus onClick={handleCommentDialogClose} className='dialogButton' >
+            <DialogActions className='dialogAction'>
+                <Button variant="outlined" autoFocus onClick={handleCommentDialogClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button onClick={handleAddComment} className='dialogButton' >Add Comment</Button>
+                <Button variant="outlined" onClick={handleAddComment} className='dialogButton' >Add Comment</Button>
             </DialogActions>
         </Dialog>
     );
