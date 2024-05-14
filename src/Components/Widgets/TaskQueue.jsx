@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../Style/TaskQueue.scss';
 import { Button } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
@@ -8,6 +8,13 @@ import AddCommentDialog from '../Sub-Components/AddCommentDialog';
 
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 import FilterDialog from '../Sub-Components/FilterDialog';
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+
+import axios from 'axios';
+import UpdateTaskDilog from '../Sub-Components/UpdateTaskDilog';
+
+import { useSelector } from 'react-redux';
 
 function TaskQueue() {
 
@@ -23,13 +30,25 @@ function TaskQueue() {
 
     const [newComment, setNewComment] = useState('');
 
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
+    const [updatedTask, setUpdatedTask] = useState('');
+
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
 
     const [filterDate, setFilterDate] = useState('');
-    
+
     const [filterStatus, setFilterStatus] = useState('');
-    
+
     const [filteredRows, setFilteredRows] = useState([]);
+
+    const [updateTaskId, setUpdateTaskId] = useState('');
+
+    const [rows, setRows] = useState([]);
+
+    const userId = useSelector(state => state.auth.loggedUser.id);
+    
+    const token = useSelector(state => state.auth.token);
 
     const columns = [
         { field: 'colorcode' },
@@ -38,28 +57,18 @@ function TaskQueue() {
         { field: 'comments' },
     ];
 
-    const [rows, setRows] = useState([
-        { id: 1, date: '2024-05-11', task: 'Style the Filter Dialog', status: 'ToDo', comments: 'Created On' },
-        { id: 2, date: '2024-05-11', task: 'Reduce the size of color code to 10px', status: 'ToDo', comments: 'Created On' },
-        { id: 3, date: '2024-05-11', task: 'Align the Task cell text to left', status: 'ToDo', comments: 'Created On' },
-        { id: 4, date: '2024-05-11', task: 'Globalize the Main Color Scheme', status: 'ToDo', comments: 'Created On' },
-        { id: 5, date: '2024-05-11', task: 'Create a dark-light theme toggle', status: 'ToDo', comments: 'Created On' },
-        { id: 6, date: '2024-05-11', task: 'Try Post card yellow theme', status: 'ToDo', comments: 'Created On' },
-        { id: 7, date: '2024-03-22', task: 'Task 7', status: 'Completed', comments: 'Comment 7' },
-        { id: 8, date: '2024-03-23', task: 'Task 8', status: 'In Progress', comments: 'Comment 8' },
-        { id: 9, date: '2024-03-24', task: 'Task 9', status: 'ToDo', comments: 'Comment 9' },
-        { id: 10, date: '2024-03-25', task: 'Task 10', status: 'Completed', comments: 'Comment 10' },
-        { id: 11, date: '2024-03-26', task: 'Task 11', status: 'In Progress', comments: 'Comment 11' },
-        { id: 12, date: '2024-03-27', task: 'Task 12', status: 'ToDo', comments: 'Comment 12' },
-        { id: 13, date: '2024-03-28', task: 'Task 13', status: 'Completed', comments: 'Comment 13' },
-        { id: 14, date: '2024-03-29', task: 'Task 14', status: 'In Progress', comments: 'Comment 14' },
-        { id: 15, date: '2024-03-30', task: 'Task 15', status: 'ToDo', comments: 'Comment 15' },
-        { id: 16, date: '2024-03-31', task: 'Task 16', status: 'Completed', comments: 'Comment 16' },
-        { id: 17, date: '2024-04-01', task: 'Task 17', status: 'In Progress', comments: 'Comment 17' },
-        { id: 18, date: '2024-04-02', task: 'Task 18', status: 'ToDo', comments: 'Comment 18' },
-        { id: 19, date: '2024-04-03', task: 'Task 19', status: 'Completed', comments: 'Comment 19' },
-        { id: 20, date: '2024-04-04', task: 'Task 20', status: 'In Progress', comments: 'Comment 20' },
-    ]);
+    const fetchTasks = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/tasks/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setRows(response.data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error.message);
+        }
+    };
 
     const StatusDropdownCell = ({ id, value, onChange }) => {
         const [status, setStatus] = useState(value);
@@ -95,45 +104,104 @@ function TaskQueue() {
         }
     };
 
+    const deleteTaskById = async (taskId) => {
+        try {
+            await axios.delete(`http://localhost:8080/api/tasks/${taskId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            fetchTasks();
+        } catch (error) {
+            console.error('Error deleting task:', error.message);
+        }
+    };
+
     const handleDeleteSelectedRows = () => {
-        const remainingRows = rows.filter((row, index) => !selectedRows.includes(index));
-        setRows(remainingRows);
+        selectedRows.forEach(rowIndex => {
+            console.log("TASK", rows[rowIndex]);
+            const taskId = rows[rowIndex].taskId;
+            console.log("TASK ID-", taskId);
+            deleteTaskById(taskId);
+        });
         setSelectedRows([]);
     };
 
-    const handleStatusChange = (rowId, newStatus) => {
+    const handleStatusChange = async (taskId, newStatus) => {
+        try {
+            await axios.put(`http://localhost:8080/api/tasks/${taskId}`, { status: newStatus }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        const updatedRows = rows.map(row => {
-            if (row.id === rowId) {
-                return { ...row, status: newStatus };
-            }
-            return row;
-        });
+            fetchTasks();
+        } catch (error) {
+            console.error('Error updating task status:', error.message);
+        }
+    };
 
-        setRows(updatedRows);
-
-        const updatedFilteredRows = filteredRows.map(row => {
-            if (row.id === rowId) {
-                return { ...row, status: newStatus };
-            }
-            return row;
-        });
-
-        setFilteredRows(updatedFilteredRows);
+    const handleUpdateTask = async (taskId) => {
+        try {
+            await axios.put(`http://localhost:8080/api/tasks/${taskId}`, { task: updatedTask }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            fetchTasks();
+            handleUpdateDialogClose();
+        } catch (error) {
+            console.error('Error updating task status:', error.message);
+        }
     };
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const handleClickOpenUpdatedDialog = () => {
+        setOpenUpdateDialog(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
     };
 
-    const handleAddTask = () => {
-        console.log(newTask);
-        setNewTask('');
-        handleClose();
+    const handleUpdateDialogClose = () => {
+        setOpenUpdateDialog(false);
+    }
+
+    const currentDate = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleAddTask = async () => {
+        try {
+            await axios.post('http://localhost:8080/api/tasks', {
+                task: newTask,
+                date: currentDate(),
+                userId: userId,
+                status: 'ToDo'
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            setNewTask('');
+            handleClose();
+
+            fetchTasks();
+
+        } catch (error) {
+            console.error('Error adding task:', error.message);
+        }
     };
 
     const handleCommentClickOpen = () => {
@@ -173,6 +241,15 @@ function TaskQueue() {
         setFilteredRows([]);
     };
 
+    const handleEditTask = (taskId) => {
+        setUpdateTaskId(taskId);
+        handleClickOpenUpdatedDialog();
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, );
+
     return (
         <div className='TQC'>
             <div className="taskQueueWgt">
@@ -181,7 +258,9 @@ function TaskQueue() {
                     <div className='buttons' >
                         {selectedRows.length > 0 && (
                             <>
-                                <div className="selection">{selectedRows.length} are selected out of {rows.length}</div>
+                                <div className="selection">
+                                    {selectedRows.length} are selected out of {filteredRows.length > 0 ? filteredRows.length : rows.length}
+                                </div>
                                 <Button variant="outlined" className='clearButton' onClick={handleDeleteSelectedRows}>Delete</Button>
                             </>
                         )}
@@ -206,23 +285,37 @@ function TaskQueue() {
                                             <td
                                                 key={column.field}
                                                 className={`grid-cell ${column.field !== 'status' ? 'clickable' : ''}`}
-                                                onClick={ (column.field !== 'status' && column.field !== 'comments' ) ? () => toggleRowSelection(rowIndex) : ( column.field === 'comments' ? () => toggleRow(rowIndex) : undefined ) }
+                                                onClick={(column.field !== 'status' && column.field !== 'comments') ? () => toggleRowSelection(rowIndex) : (column.field === 'comments' ? () => toggleRow(rowIndex) : undefined)}
                                                 style={{
-                                                    width: column.field === 'colorcode' ? '0px' : (column.field === 'status' ? '70px' : ( column.field === 'comments' ? '20px' : '500px')),
+                                                    width: column.field === 'colorcode' ? '0px' : (column.field === 'status' ? '70px' : (column.field === 'comments' ? '20px' : '500px')),
                                                     textAlign: column.field === 'task' ? 'left' : 'center',
-                                                    backgroundColor:
-                                                        column.field === 'colorcode'
-                                                            ? row.status === 'ToDo' ? '#E5524B' : row.status === 'In Progress' ? '#DBEF5A' : row.status === 'Completed' ? '#9ADF5A' : ''
-                                                            : ''
                                                 }}
                                             >
                                                 {column.field === 'status' ? (
-                                                    <StatusDropdownCell id={row.id} value={row[column.field]} onChange={(id, newStatus) => handleStatusChange(id, newStatus)} />
+                                                    <StatusDropdownCell
+                                                        id={row.taskId}
+                                                        value={row[column.field]}
+                                                        onChange={(id, newStatus) => handleStatusChange(id, newStatus)}
+                                                    />
                                                 ) : column.field === 'comments' ? (
                                                     <RateReviewOutlinedIcon className='commentsIcon' />
+                                                ) : column.field === 'colorcode' ? (
+                                                    <div className={row.status === 'In Progress' ? 'InProgress' : row.status}></div>
                                                 ) : (
-                                                    row[column.field]
+                                                    <>
+                                                        {row[column.field]}
+                                                        {column.field === 'task' && (
+                                                            <EditOutlinedIcon
+                                                                className="editIcon"
+                                                                onClick={(event) => {
+                                                                    event.stopPropagation();
+                                                                    handleEditTask(row.taskId);
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </>
                                                 )}
+
                                             </td>
                                         ))}
                                     </tr>
@@ -231,8 +324,7 @@ function TaskQueue() {
                                             <td colSpan={columns.length}>
                                                 <div className="accordion-item">
                                                     <div className='commentLogs'>
-                                                        <div className="accordion-body">{row.date}</div>
-                                                        <div className="accordion-body">{row.comments}</div>
+                                                        <div className="accordion-body">{row.comments}  {row.date}</div>
                                                     </div>
                                                     <Button variant="outlined" className='addCommentButton' onClick={handleCommentClickOpen}>Add Comment</Button>
                                                 </div>
@@ -266,8 +358,17 @@ function TaskQueue() {
                 filterDate={filterDate}
                 setFilterDate={setFilterDate}
                 filterStatus={filterStatus}
-                setFilterStatus={setFilterStatus}   
+                setFilterStatus={setFilterStatus}
             />
+            <UpdateTaskDilog
+                openUpdateDialog={openUpdateDialog}
+                handleUpdateDialogClose={handleUpdateDialogClose}
+                handleUpdateTask={handleUpdateTask}
+                setUpdatedTask={setUpdatedTask}
+                updatedTask={updatedTask}
+                taskId={updateTaskId}
+            />
+
         </div>
     );
 }
