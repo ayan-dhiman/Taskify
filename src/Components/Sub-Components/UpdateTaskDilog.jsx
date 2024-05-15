@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
 
-function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, handleUpdateTask, updatedTask, setUpdatedTask }) {
+function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, handleUpdateTask, updatedTask, setUpdatedTask, taskToUpdate }) {
     return (
         <Dialog
             open={openUpdateDialog}
@@ -21,7 +21,7 @@ function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, ha
 
                     <input
                         type='text'
-                        placeholder='New Task'
+                        placeholder={taskToUpdate}
                         className='newTaskInput'
                         value={updatedTask}
                         onChange={(event) => setUpdatedTask(event.target.value)}

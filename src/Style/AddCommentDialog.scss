@@ -7,11 +7,13 @@
         font-family: Raleway;
         background-color: $main-body-background-color;
         color: $widget-body-font-color;
+        border-top: $border-top;
 
         .dialogTitle{
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid $widget-body-font-color;
+            //border-bottom: 1px solid $widget-body-font-color;
+            box-shadow: $widget-header-box-shadow;
             font-weight: 500;
         }
 
@@ -44,8 +46,9 @@
         background-color: $main-body-background-color;
         
         .dialogButton{
-            color: $widget-body-font-color;
-            border-color: $widget-body-font-color;
+            color: $button-font-color;
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
             font-size: 12px;
             padding: 0px 20px 0px 20px;
 

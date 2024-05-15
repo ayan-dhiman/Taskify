@@ -17,7 +17,7 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         Once you have entered the filter details, click the "Apply" button to apply the filter to the task queue.
                     </p>
 
-                    <TextField
+                    {/* <TextField
                         label="Filter by Date"
                         type="date"
                         size='small'
@@ -25,10 +25,22 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         onChange={(e) => setFilterDate(e.target.value)}
                         InputLabelProps={{
                             shrink: true,
+                            style: { color: 'white' }
                         }}
                         fullWidth
                         margin="dense"
                         className='input'
+                        style={{ color: 'white' }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '&.Mui-focused fieldset': { borderColor: 'white' },
+                            },
+                            '&:focus-within .MuiInputLabel-root': {
+                                '&.Mui-focused': {
+                                  color: 'white',
+                                },
+                            },
+                        }}
                     />
                     <TextField
                         select
@@ -36,23 +48,54 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         size='small'
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
+                        InputLabelProps={{
+                            style: { color: 'white' }
+                        }}
                         fullWidth
                         margin="dense"
                         className='input'
+                        style={{ color: 'white' }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '&.Mui-focused fieldset': { borderColor: 'white' },
+                            },
+                            '&:focus-within .MuiInputLabel-root': {
+                                '&.Mui-focused': {
+                                  color: 'white',
+                                },
+                            },
+                        }}
                     >
-                        <MenuItem value="">All</MenuItem>
                         <MenuItem value="Completed">Completed</MenuItem>
                         <MenuItem value="In Progress">In Progress</MenuItem>
                         <MenuItem value="ToDo">ToDo</MenuItem>
-                    </TextField>
+                    </TextField> */}
+
+                    <input
+                        className='input'
+                        type="date"
+                        value={filterDate}
+                        onChange={(e) => setFilterDate(e.target.value)}
+                    />
+
+                    <select
+                        className='select'
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                    >
+                        <option value="Completed">Completed</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="ToDo">ToDo</option>
+                    </select>
+
 
                 </div>
 
             </div>
 
-            <DialogActions>
-                <Button onClick={handleFilterDialogClose} className='dialogButton'>Cancel</Button>
-                <Button onClick={handleFilter} className='dialogButton' >Apply</Button>
+            <DialogActions className='dialogAction'>
+                <Button onClick={handleFilterDialogClose} variant='outlined' className='dialogButton'>Cancel</Button>
+                <Button onClick={handleFilter} className='dialogButton' variant='outlined' >Apply</Button>
             </DialogActions>
         </Dialog>
     )

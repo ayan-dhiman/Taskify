@@ -23,7 +23,8 @@
             padding: 10px;
             font-size: x-small;
             font-weight: 500;
-            border-bottom: 1px solid rgba(1, 1, 1, 0.2);
+            //border-bottom: 1px solid rgba(1, 1, 1, 0.2);
+            border-top: $border-top;
             box-shadow: $widget-header-box-shadow;
             height: 10px;
             position: sticky;
@@ -50,17 +51,18 @@
 
                     font-size: 10px;
                     padding: 0px;
-                    color: $widget-body-font-color;
-                    border-color: $widget-body-font-color;
-
+                    background-color: $button-bg-color;
+                    color: $button-font-color;
+                    border-color: $button-bg-color;
                 }
 
                 .clearButton {
 
                     font-size: 10px;
                     padding: 0px 20px 0px 20px;
-                    color: $widget-body-font-color;
-                    border-color: $widget-body-font-color;
+                    background-color: $button-bg-color;
+                    color: $button-font-color;
+                    border-color: $button-bg-color;
 
                 }
 
@@ -93,19 +95,19 @@
                     cursor: pointer;
                     border-bottom: 1px solid $widget-border-color;
 
-                    .ToDo{
+                    .ToDo {
                         background-color: #E5524B;
                         min-width: 5px;
                         min-height: 12px;
                     }
 
-                    .InProgress{
+                    .InProgress {
                         background-color: #DBEF5A;
                         min-width: 5px;
                         min-height: 12px;
                     }
-                    
-                    .Completed{
+
+                    .Completed {
                         background-color: #9ADF5A;
                         min-width: 5px;
                         min-height: 12px;
@@ -118,7 +120,7 @@
                     &:hover {
                         background-color: $Task-Queue-Widget-Row-Hover-Background-Color;
 
-                        .editIcon{
+                        .editIcon {
                             visibility: visible !important;
                         }
 
@@ -152,7 +154,7 @@
                             color: white;
                         }
 
-                        .editIcon{
+                        .editIcon {
                             font-size: 12px;
                             margin-left: 10px;
                             visibility: hidden;
@@ -187,8 +189,9 @@
                     .addCommentButton {
                         font-size: 10px;
                         padding: 0 10px 0 10px;
-                        color: $widget-body-font-color;
-                        border-color: $widget-body-font-color;
+                        color: $button-font-color;
+                        border-color: $button-bg-color;
+                        background-color: $button-bg-color;
                         z-index: 0;
                     }
 

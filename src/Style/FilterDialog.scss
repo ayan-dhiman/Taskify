@@ -4,13 +4,17 @@
 
     .filterDilog{
 
+        border-top: $border-top;
         font-family: Raleway;
+        background-color: $main-body-background-color;
+        color: $widget-body-font-color;
 
         .dialogTitle{
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid $widget-body-font-color;
+            //border-bottom: 1px solid $widget-body-font-color;
             font-weight: 500;
+            box-shadow: $widget-header-box-shadow;
         }
 
         .dialogBody{
@@ -25,17 +29,64 @@
             }
         
             .input{
-                
+                //padding: 7px;
+                padding: 0px 5px 0px 5px;
+                height: 30px;
+                border: 1px solid $widget-body-font-color;
+                color: $widget-body-font-color;
+                background-color: transparent;
             }
+
+            .input[type="date"]::-webkit-calendar-picker-indicator {
+
+                background-color: #ffffff;
+                color: #ffffff;
+                padding: 4px;
+                border-radius: 4px;
+            }
+            
+            .select{
+                //padding: 7px;
+                padding: 0px 1px 0px 1px;
+                height: 30px;
+                border: 1px solid $widget-body-font-color;
+                color: $widget-body-font-color;
+                background-color: transparent;
+            }
+
+            .select option {
+                background-color: #fff;
+                color: #333;
+                font-size: 14px;
+
+                &:hover{
+                    background-color: grey;
+                }
+
+            }
+            
+            .select option:checked {
+                background-color: #007bff;
+                color: #fff;
+
+            }
+            
 
         }
     
     }
 
-    .dialogButton{
-        color: $widget-body-font-color;
-        border-color: $widget-body-font-color;
-        font-size: 12px;
+    .dialogAction{
+        background-color: $main-body-background-color;
+        
+        .dialogButton{
+            color: $button-font-color;
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
+            font-size: 12px;
+            padding: 0px 20px 0px 20px;
+
+        }
     }
 
 }

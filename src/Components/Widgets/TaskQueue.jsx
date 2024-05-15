@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../../Style/TaskQueue.scss';
-import { Button } from '@mui/material';
+import { Button, Snackbar, SnackbarContent } from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 
 import AddTaskDialog from '../Sub-Components/AddTaskDialog';
@@ -44,11 +44,19 @@ function TaskQueue() {
 
     const [updateTaskId, setUpdateTaskId] = useState('');
 
+    const [taskToBeUpdated, setTaskToBeUpdated] = useState('');
+
     const [rows, setRows] = useState([]);
 
     const userId = useSelector(state => state.auth.loggedUser.id);
-    
+
     const token = useSelector(state => state.auth.token);
+
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const [loading, setLoading] = useState(false);
 
     const columns = [
         { field: 'colorcode' },
@@ -56,6 +64,19 @@ function TaskQueue() {
         { field: 'status' },
         { field: 'comments' },
     ];
+
+    const handleClick = (message) => {
+        setSnackbarMessage(message);
+        setOpenSnackBar(true);
+    };
+
+    const handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackBar(false);
+    };
 
     const fetchTasks = async () => {
         try {
@@ -149,7 +170,7 @@ function TaskQueue() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             fetchTasks();
             handleUpdateDialogClose();
         } catch (error) {
@@ -167,6 +188,7 @@ function TaskQueue() {
 
     const handleClose = () => {
         setOpen(false);
+        setOpenSnackBar(false);
     };
 
     const handleUpdateDialogClose = () => {
@@ -182,6 +204,14 @@ function TaskQueue() {
     };
 
     const handleAddTask = async () => {
+
+        setOpenSnackBar(false);
+
+        if (!newTask.trim()) {
+            handleClick('Task cannot be blank');
+            return;
+        }
+
         try {
             await axios.post('http://localhost:8080/api/tasks', {
                 task: newTask,
@@ -210,10 +240,18 @@ function TaskQueue() {
 
     const handleCommentDialogClose = () => {
         setOpenCommentDialog(false);
+        setOpenSnackBar(false);
     };
 
     const handleAddComment = () => {
-        console.log(newTask);
+
+        setOpenSnackBar(false);
+
+        if(!newComment.trim())
+            {
+                handleClick('Task cannot be blank');
+                return;
+            }
         setNewComment('');
         handleCommentDialogClose();
     };
@@ -223,10 +261,20 @@ function TaskQueue() {
     };
 
     const handleFilterDialogClose = () => {
+        setOpenSnackBar(false);
         setOpenFilterDialog(false);
     };
 
     const handleFilter = () => {
+
+        setOpenSnackBar(false);
+
+        if(!filterDate && !filterStatus)
+            {
+                handleClick('Filters cannot be blank');
+                return;
+            }
+
         const filteredData = rows.filter(row => {
             const dateMatch = filterDate ? row.date === filterDate : true;
             const statusMatch = filterStatus ? row.status === filterStatus : true;
@@ -248,7 +296,7 @@ function TaskQueue() {
 
     useEffect(() => {
         fetchTasks();
-    }, );
+    }, []);
 
     return (
         <div className='TQC'>
@@ -309,6 +357,7 @@ function TaskQueue() {
                                                                 className="editIcon"
                                                                 onClick={(event) => {
                                                                     event.stopPropagation();
+                                                                    setTaskToBeUpdated(row.task);
                                                                     handleEditTask(row.taskId);
                                                                 }}
                                                             />
@@ -367,7 +416,23 @@ function TaskQueue() {
                 setUpdatedTask={setUpdatedTask}
                 updatedTask={updatedTask}
                 taskId={updateTaskId}
+                taskToUpdate={taskToBeUpdated}
             />
+
+            <Snackbar className='snackbar'
+                open={openSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                autoHideDuration={5000}
+                onClose={handleSnackBarClose}>
+                <SnackbarContent
+                    style={{
+                        fontSize: '12px',
+                        fontFamily: 'Raleway',
+                        minWidth: 'fit-content',
+                    }}
+                    message={snackbarMessage}
+                />
+            </Snackbar>
 
         </div>
     );

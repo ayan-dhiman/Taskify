@@ -14,12 +14,7 @@ function Register() {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const steps = ['Name', 'Email', 'Password', 'Role'];
-
     const navigate = useNavigate();
-
-    const navigateTo = (path) => {
-        navigate(path);
-    };
 
     const handleClick = (message) => {
         setSnackbarMessage(message);
@@ -33,7 +28,56 @@ function Register() {
         setOpenSnackbar(false);
     };
 
-    const handleNext = () => {
+    const validateInput = async () => {
+
+        if (activeStep === 0) {
+            if (!name.trim()) {
+                handleClick('Name cannot be blank');
+                return false;
+            }
+            if (!name.match(/^[a-zA-Z\s]+$/)) {
+                handleClick('Name should only contain alphabets');
+                return false;
+            }
+        } else if (activeStep === 1) {
+            if (!email.trim()) {
+                handleClick('Email cannot be blank');
+                return false;
+            }
+            if (!email.match(/^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/)) {
+                handleClick('Please enter a valid email address');
+                return false;
+            }
+            const isEmailRegistered = await verifyEmail(email);
+            if (isEmailRegistered) {
+                handleClick('Email is already registered!');
+                return false;
+            }
+        } else if (activeStep === 2) {
+            if (!password.trim()) {
+                handleClick('Password cannot be blank');
+                return false;
+            }
+            if (password.trim().length < 6) {
+                handleClick('Password must be at least 6 characters long');
+                return false;
+            }
+        } else if (activeStep === 3) {
+
+            if (!role.trim()) {
+                handleClick('Please select a role');
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const handleNext = async () => {
+        setOpenSnackbar(false);
+        const value = await validateInput();
+        if (!value) {
+            return;
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -58,12 +102,17 @@ function Register() {
     };
 
     const handleRegister = () => {
+
+        if (!validateInput()) {
+            return;
+        }
+
         setLoading(true);
         console.log(name, email, password, role);
         axios.post('http://localhost:8080/auth/register', { name, email, password, role })
             .then(response => {
                 setLoading(false);
-                navigateTo("/login");
+                navigate("/login");
             })
             .catch(error => {
                 setLoading(false);
@@ -75,6 +124,25 @@ function Register() {
                     handleClick('An error occurred. Please try again later');
                 }
             });
+    };
+
+    const verifyEmail = async (email) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:8080/auth/verifyemail?email=${email}`);
+            setLoading(false);
+            return response.data;
+        } catch (error) {
+            setLoading(false);
+            if (error.response) {
+                handleClick('Error: ' + error.response.data.message);
+            } else if (error.request) {
+                handleClick('Network Error: Please check your internet connection');
+            } else {
+                handleClick('An error occurred. Please try again later');
+            }
+            return false;
+        }
     };
 
     return (
@@ -102,7 +170,7 @@ function Register() {
                     <div>
                         {activeStep === steps.length ? (
                             <div>
-                                <Typography>All steps completed - you&apos;re finished</Typography>
+                                <Typography>All steps completed - you&apos;re Registered</Typography>
                             </div>
                         ) : (
                             <div className='inputContainer' >
@@ -141,6 +209,7 @@ function Register() {
                 open={openSnackbar}
                 autoHideDuration={6000}
                 onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <SnackbarContent
                     style={{
