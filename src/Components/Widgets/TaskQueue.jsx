@@ -17,6 +17,8 @@ import UpdateTaskDilog from '../Sub-Components/UpdateTaskDilog';
 import { useSelector } from 'react-redux';
 
 function TaskQueue() {
+    
+    const apiUrl = process.env.REACT_APP_API_URL;
 
     const [selectedRows, setSelectedRows] = useState([]);
 
@@ -80,7 +82,7 @@ function TaskQueue() {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/tasks/${userId}`, {
+            const response = await axios.get(`${apiUrl}/tasks/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -127,7 +129,7 @@ function TaskQueue() {
 
     const deleteTaskById = async (taskId) => {
         try {
-            await axios.delete(`http://localhost:8080/api/tasks/${taskId}`, {
+            await axios.delete(`${apiUrl}/tasks/${taskId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -151,7 +153,7 @@ function TaskQueue() {
 
     const handleStatusChange = async (taskId, newStatus) => {
         try {
-            await axios.put(`http://localhost:8080/api/tasks/${taskId}`, { status: newStatus }, {
+            await axios.put(`${apiUrl}/tasks/${taskId}`, { status: newStatus }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -165,7 +167,7 @@ function TaskQueue() {
 
     const handleUpdateTask = async (taskId) => {
         try {
-            await axios.put(`http://localhost:8080/api/tasks/${taskId}`, { task: updatedTask }, {
+            await axios.put(`${apiUrl}/tasks/${taskId}`, { task: updatedTask }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -213,7 +215,7 @@ function TaskQueue() {
         }
 
         try {
-            await axios.post('http://localhost:8080/api/tasks', {
+            await axios.post(`${apiUrl}/tasks`, {
                 task: newTask,
                 date: currentDate(),
                 userId: userId,

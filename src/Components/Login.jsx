@@ -14,6 +14,9 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const authUrl = process.env.REACT_APP_AUTH_URL;
+
 
     const handleClick = (message) => {
         setSnackbarMessage(message);
@@ -38,7 +41,7 @@ function Login() {
 
     const fetchUserDetails = (token) => {
 
-        axios.get(`http://localhost:8080/api/users/email/${email}`, {
+        axios.get(`${apiUrl}/users/email/${email}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -74,7 +77,7 @@ function Login() {
             password: password
         };
 
-        axios.post('http://localhost:8080/auth/login', requestData)
+        axios.post(`${authUrl}/login`, requestData)
             .then(response => {
                 setLoading(false);
                 const token = response.data.token;

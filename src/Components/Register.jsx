@@ -15,6 +15,9 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const steps = ['Name', 'Email', 'Password', 'Role'];
     const navigate = useNavigate();
+    
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const authUrl = process.env.REACT_APP_AUTH_URL;
 
     const handleClick = (message) => {
         setSnackbarMessage(message);
@@ -109,7 +112,7 @@ function Register() {
 
         setLoading(true);
         console.log(name, email, password, role);
-        axios.post('http://localhost:8080/auth/register', { name, email, password, role })
+        axios.post(`${authUrl}/register`, { name, email, password, role })
             .then(response => {
                 setLoading(false);
                 navigate("/login");
@@ -129,7 +132,7 @@ function Register() {
     const verifyEmail = async (email) => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/auth/verifyemail?email=${email}`);
+            const response = await axios.get(`${authUrl}/verifyemail?email=${email}`);
             setLoading(false);
             return response.data;
         } catch (error) {
