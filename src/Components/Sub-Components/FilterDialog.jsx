@@ -1,10 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions } from '@mui/material';
 import React from 'react';
 import '../../Style/FilterDialog.scss';
+import { useSelector } from 'react-redux';
 
 function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter, filterDate, setFilterDate, filterStatus, setFilterStatus }) {
+
+    const theme = useSelector(state => state.theme.theme);
+
     return (
-        <Dialog open={openFilterDialog} onClose={handleFilterDialogClose} className='filterDilogContainer'>
+        <Dialog open={openFilterDialog} onClose={handleFilterDialogClose} className={`filterDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}>
 
             <div className='filterDilog' >
                 <div className='dialogTitle'>
@@ -16,60 +20,6 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                     <p>
                         Once you have entered the filter details, click the "Apply" button to apply the filter to the task queue.
                     </p>
-
-                    {/* <TextField
-                        label="Filter by Date"
-                        type="date"
-                        size='small'
-                        value={filterDate}
-                        onChange={(e) => setFilterDate(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                            style: { color: 'white' }
-                        }}
-                        fullWidth
-                        margin="dense"
-                        className='input'
-                        style={{ color: 'white' }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                '&.Mui-focused fieldset': { borderColor: 'white' },
-                            },
-                            '&:focus-within .MuiInputLabel-root': {
-                                '&.Mui-focused': {
-                                  color: 'white',
-                                },
-                            },
-                        }}
-                    />
-                    <TextField
-                        select
-                        label="Filter by Status"
-                        size='small'
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                        InputLabelProps={{
-                            style: { color: 'white' }
-                        }}
-                        fullWidth
-                        margin="dense"
-                        className='input'
-                        style={{ color: 'white' }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                '&.Mui-focused fieldset': { borderColor: 'white' },
-                            },
-                            '&:focus-within .MuiInputLabel-root': {
-                                '&.Mui-focused': {
-                                  color: 'white',
-                                },
-                            },
-                        }}
-                    >
-                        <MenuItem value="Completed">Completed</MenuItem>
-                        <MenuItem value="In Progress">In Progress</MenuItem>
-                        <MenuItem value="ToDo">ToDo</MenuItem>
-                    </TextField> */}
 
                     <input
                         className='input'
@@ -83,6 +33,7 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
                     >
+                        <option value="" disabled>Select Status </option>
                         <option value="Completed">Completed</option>
                         <option value="In Progress">In Progress</option>
                         <option value="ToDo">ToDo</option>

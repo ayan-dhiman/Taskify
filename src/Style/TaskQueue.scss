@@ -3,10 +3,200 @@
 .TQC {
     width: 60%;
 
+    &.light {
+
+        .taskQueueWgt {
+            background-color: $widget-body-background-color-light;
+
+            .widget-header {
+                color: $widget-header-font-color-light;
+                border-top: $border-top-light;
+                box-shadow: $widget-box-shadow-light;
+                background-color: $widget-header-background-color-light;
+
+                .buttons {
+
+                    .addButton {
+                        background-color: $button-bg-color-light;
+                        color: $button-font-color-light;
+                        border-color: $button-bg-color-light;
+                    }
+
+                    .clearButton {
+                        background-color: $button-bg-color-light;
+                        color: $button-font-color-light;
+                        border-color: $button-bg-color-light;
+
+                    }
+
+                }
+
+            }
+
+            .widget-body {
+                .grid {
+                    color: $widget-body-font-color-light;
+
+                    .selected-row {
+                        background-color: $Task-Queue-Widget-Selected-Row-Background-Color-light;
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Selected-Row-Hover-Background-Color-light;
+                        }
+                    }
+
+                    .grid-row {
+                        border-bottom: 1px solid $widget-border-color-light;
+
+                        &.expanded-row {
+                            background-color: $Task-Queue-Widget-Row-Background-Color-light;
+                        }
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Row-Hover-Background-Color-light;
+                        }
+
+                        .grid-cell {
+
+                            .status-dropdown {
+                                color: $widget-body-font-color-light;
+                            }
+
+                            .status-dropdown option {
+                                background-color: $widget-header-background-color-light;
+                                color: $widget-header-font-color-light;
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                .accordion-content {
+
+                    .accordion-item {
+
+                        .headerContent {
+
+                            .buttons {
+
+                                .addCommentButton {
+                                    color: $button-font-color-light;
+                                    border-color: $button-bg-color-light;
+                                    background-color: $button-bg-color-light;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    &.dark {
+
+        .taskQueueWgt {
+            background-color: $widget-body-background-color-dark;
+
+            .widget-header {
+                color: $widget-header-font-color-dark;
+                border-top: $border-top-dark;
+                box-shadow: $widget-box-shadow-dark;
+                background-color: $widget-header-background-color-dark;
+
+                .buttons {
+
+                    .addButton {
+                        background-color: $button-bg-color-dark;
+                        color: $button-font-color-dark;
+                        border-color: $button-bg-color-dark;
+                    }
+
+                    .clearButton {
+                        background-color: $button-bg-color-dark;
+                        color: $button-font-color-dark;
+                        border-color: $button-bg-color-dark;
+
+                    }
+
+                }
+
+            }
+
+            .widget-body {
+                .grid {
+                    color: $widget-body-font-color-dark;
+
+                    .selected-row {
+                        background-color: $Task-Queue-Widget-Selected-Row-Background-Color-dark;
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Selected-Row-Hover-Background-Color-dark;
+                        }
+                    }
+
+                    .grid-row {
+                        border-bottom: 1px solid $widget-border-color-dark;
+
+                        &.expanded-row {
+                            background-color: $Task-Queue-Widget-Row-Background-Color-dark;
+                        }
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Row-Hover-Background-Color-dark;
+                        }
+
+                        .grid-cell {
+
+                            .status-dropdown {
+                                color: $widget-body-font-color-dark;
+                            }
+
+                            .status-dropdown option {
+                                background-color: $widget-header-background-color-dark;
+                                color: $widget-header-font-color-dark;
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                .accordion-content {
+
+                    .accordion-item {
+
+                        .headerContent {
+
+                            .buttons {
+
+                                .addCommentButton {
+                                    color: $button-font-color-dark;
+                                    border-color: $button-bg-color-dark;
+                                    background-color: $button-bg-color-dark;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
     .taskQueueWgt {
         box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-        background-color: $widget-body-background-color;
-        //border: 1px solid $widget-border-color;
         display: flex;
         flex-direction: column;
         margin: 10px;
@@ -19,17 +209,12 @@
         }
 
         .widget-header {
-            color: $widget-header-font-color;
             padding: 10px;
             font-size: x-small;
             font-weight: 500;
-            //border-bottom: 1px solid rgba(1, 1, 1, 0.2);
-            border-top: $border-top;
-            box-shadow: $widget-header-box-shadow;
             height: 10px;
             position: sticky;
             top: 0;
-            background-color: $widget-header-background-color;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -51,18 +236,12 @@
 
                     font-size: 10px;
                     padding: 0px;
-                    background-color: $button-bg-color;
-                    color: $button-font-color;
-                    border-color: $button-bg-color;
                 }
 
                 .clearButton {
 
                     font-size: 10px;
                     padding: 0px 20px 0px 20px;
-                    background-color: $button-bg-color;
-                    color: $button-font-color;
-                    border-color: $button-bg-color;
 
                 }
 
@@ -76,129 +255,142 @@
                 font-size: 12px;
                 table-layout: fixed;
                 width: 100%;
-                color: $widget-body-font-color;
+            }
 
-                .selected-row {
-                    background-color: $Task-Queue-Widget-Selected-Row-Background-Color;
+            .commentsIcon {
+                font-size: 18px;
+            }
 
-                    &:hover {
-                        background-color: $Task-Queue-Widget-Selected-Row-Hover-Background-Color;
-                    }
+            .grid-row {
+                display: table-row;
+                cursor: pointer;
+
+                .ToDo {
+                    background-color: #E5524B;
+                    min-width: 5px;
+                    min-height: 12px;
                 }
 
-                .commentsIcon {
-                    font-size: 18px;
+                .InProgress {
+                    background-color: #DBEF5A;
+                    min-width: 5px;
+                    min-height: 12px;
                 }
 
-                .grid-row {
-                    display: table-row;
-                    cursor: pointer;
-                    border-bottom: 1px solid $widget-border-color;
+                .Completed {
+                    background-color: #9ADF5A;
+                    min-width: 5px;
+                    min-height: 12px;
+                }
 
-                    .ToDo {
-                        background-color: #E5524B;
-                        min-width: 5px;
-                        min-height: 12px;
+                &:hover {
+
+                    .editIcon {
+                        visibility: visible !important;
                     }
 
-                    .InProgress {
-                        background-color: #DBEF5A;
-                        min-width: 5px;
-                        min-height: 12px;
+                }
+
+                .grid-cell {
+                    display: table-cell;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    padding: 5px;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    line-height: 20px;
+
+                    .status-dropdown {
+                        border: none;
+                        font-family: Raleway;
+                        font-size: 12px;
+                        border-radius: 0px;
+                        cursor: pointer;
+                        background-color: transparent;
                     }
 
-                    .Completed {
-                        background-color: #9ADF5A;
-                        min-width: 5px;
-                        min-height: 12px;
+                    .status-dropdown option:checked {
+                        background-color: #767676;
+                        color: white;
                     }
 
-                    &.expanded-row {
-                        background-color: $Task-Queue-Widget-Row-Background-Color;
-                    }
-
-                    &:hover {
-                        background-color: $Task-Queue-Widget-Row-Hover-Background-Color;
-
-                        .editIcon {
-                            visibility: visible !important;
-                        }
-
-                    }
-
-                    .grid-cell {
-                        display: table-cell;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        padding: 5px;
-                        //border: 1px solid $widget-border-color;
-
-                        .status-dropdown {
-                            border: none;
-                            font-family: Raleway;
-                            font-size: 12px;
-                            border-radius: 0px;
-                            cursor: pointer;
-                            background-color: transparent;
-                            color: $widget-body-font-color;
-                        }
-
-                        .status-dropdown option {
-                            background-color: $widget-header-background-color;
-                            color: $widget-header-font-color;
-                        }
-
-                        .status-dropdown option:checked {
-                            background-color: #767676;
-                            color: white;
-                        }
-
-                        .editIcon {
-                            font-size: 12px;
-                            margin-left: 10px;
-                            visibility: hidden;
-                        }
-
+                    .editIcon {
+                        font-size: 12px;
+                        margin-left: 10px;
+                        visibility: hidden;
                     }
 
                 }
 
             }
 
-            .accordion-content {
-                display: table-row;
-                background-color: rgba(128, 128, 128, 0.097);
+        }
 
-                .accordion-item {
-                    display: table-cell;
-                    padding: 10px;
+        .accordion-content {
+            display: table-row;
+            background-color: rgba(128, 128, 128, 0.097);
+
+            .accordion-item {
+                display: table-cell;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+                gap: 10px;
+
+                .headerContent {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
-                    border-top: 1px solid black;
-                    border-bottom: 1px solid black;
+                    width: 100%;
 
                     .commentLogs {
                         display: flex;
                         flex-direction: row;
                         gap: 30px;
+
                     }
 
-                    .addCommentButton {
-                        font-size: 10px;
-                        padding: 0 10px 0 10px;
-                        color: $button-font-color;
-                        border-color: $button-bg-color;
-                        background-color: $button-bg-color;
-                        z-index: 0;
+                    .buttons {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 20px;
+
+                        .addCommentButton {
+                            font-size: 10px;
+                            padding: 0 10px 0 10px;
+                            z-index: 0;
+                        }
+
+                    }
+
+                }
+
+                .comment {
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: left;
+                    width: 100%;
+
+                    p {
+
+                        white-space: wrap;
+                        word-wrap: break-word;
+                        line-height: 20px;
+                        width: 100%;
+                        margin: 0px;
+
                     }
 
                 }
 
             }
+
         }
     }
-
 }

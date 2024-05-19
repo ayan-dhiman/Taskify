@@ -4,6 +4,7 @@ import Dashboard from './Components/Dashboard';
 import Settings from './Components/Settings';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import Alert from './Components/Sub-Components/Alert';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
+      <Alert/>
     </div>
   );
 }

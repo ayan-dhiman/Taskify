@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
+import { useSelector } from 'react-redux';
 
 function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, handleUpdateTask, updatedTask, setUpdatedTask, taskToUpdate }) {
+    const theme = useSelector(state => state.theme.theme);
+
+    useEffect(() => {
+        if (openUpdateDialog) {
+            setUpdatedTask(taskToUpdate);
+        }
+    }, [openUpdateDialog, taskToUpdate, setUpdatedTask]);
+
     return (
         <Dialog
             open={openUpdateDialog}
             onClose={handleUpdateDialogClose}
-            className='addTaskDilogContainer'
+            className={`addTaskDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addTaskDilog'>
                 <div className='dialogTitle'> 
@@ -21,7 +30,8 @@ function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, ha
 
                     <input
                         type='text'
-                        placeholder={taskToUpdate}
+                        //placeholder={taskToUpdate}
+                        placegolder="Enter the Updated Task"
                         className='newTaskInput'
                         value={updatedTask}
                         onChange={(event) => setUpdatedTask(event.target.value)}

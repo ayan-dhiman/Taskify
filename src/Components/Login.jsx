@@ -1,9 +1,10 @@
-import { Button, LinearProgress, Snackbar, SnackbarContent } from '@mui/material';
+import { Alert, Button, LinearProgress, Snackbar, SnackbarContent } from '@mui/material';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Style/Login.scss';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 
 function Login() {
 
@@ -16,19 +17,11 @@ function Login() {
     const dispatch = useDispatch();
     const apiUrl = process.env.REACT_APP_API_URL;
     const authUrl = process.env.REACT_APP_AUTH_URL;
+    const theme = useSelector(state => state.theme.theme);
 
-
-    const handleClick = (message) => {
-        setSnackbarMessage(message);
-        setOpenSnackBar(true);
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpenSnackBar(false);
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
     };
 
     const handleEmailChange = (e) => {
@@ -48,7 +41,6 @@ function Login() {
         })
         .then(userResponse => {
             const userDetails = userResponse.data;
-            console.log('User Details:', userDetails);
             dispatch({ type: 'SET_USER', payload: userDetails });
             navigate("/dashboard");
         })
@@ -61,12 +53,12 @@ function Login() {
     const handleSignIn = () => {
 
         if (!email || !password) {
-            handleClick('Email and password both are required');
+            alert('Email and password both are required');
             return;
         }
 
         if (!email.includes('@')) {
-            handleClick('Invalid email format');
+            alert('Invalid email format');
             return;
         }
 
@@ -89,63 +81,53 @@ function Login() {
                 setLoading(false);
                 if (error.response) {
                     if (error.response.status === 401) {
-                        handleClick('Unauthorized: Please enter a valid email and password.');
+                        alert('Unauthorized: Please enter a valid email and password.');
                     } else {
                         console.error('Server Error:', error.response.data);
-                        handleClick('An error occurred while processing your request. Please try again later.');
+                        alert('An error occurred while processing your request. Please try again later.');
                     }
                 } else if (error.request) {
                     console.error('Network Error:', error.request);
-                    handleClick('Network Error: Please check your internet connection.');
+                    alert('Network Error: Please check your internet connection.');
                 } else {
                     console.error('Error:', error.message);
-                    handleClick('An error occurred. Please try again later.');
+                    alert('An error occurred. Please try again later.');
                 }
             });
     };
 
-    return (
-        <div className='loginContainer' >
-            {loading && <LinearProgress className='lProgress' />}
+    const handleTheme = () => {
+        dispatch({ type: 'SET_THEME'});
+    }
 
-            <div className="logindiv">
-                <div className="headerContainer">
+    return (
+        <div className={`loginContainer ${theme === 'light' ? 'light' : 'dark'}`} >
+            {loading && <LinearProgress className='lProgress' />}
+            <ContrastOutlinedIcon className='themeIcon' onClick={handleTheme} />
+
+            <div className={`logindiv ${theme === 'light' ? 'light' : 'dark'}`}>
+                <div className={`headerContainer ${theme === 'light' ? 'light' : 'dark'}`}>
                     <h1>Sign in to Taskify</h1>
                 </div>
 
-                <div className="loginBox">
+                <div className={`loginBox ${theme === 'light' ? 'light' : 'dark'}`}>
 
                     <div className="elabel">Registered Email ID</div>
-                    <input type="email" value={email} onChange={handleEmailChange} />
+                    <input type="email" value={email} onChange={handleEmailChange} className={`input ${theme === 'light' ? 'light' : 'dark'}`} />
 
                     <div className="paswdLableContainer">
                         <div className="plabel">Password</div>
                         <Link className='link'>Forgot Password !</Link>
                     </div>
-                    <input type="password" value={password} onChange={handlePasswordChange} />
+                    <input type="password" value={password} onChange={handlePasswordChange} className={`input ${theme === 'light' ? 'light' : 'dark'}`} />
 
-                    <Button variant='outlined' onClick={handleSignIn} >Sign In</Button>
+                    <Button variant='outlined' onClick={handleSignIn} className={`Button ${theme === 'light' ? 'light' : 'dark'}`} >Sign In</Button>
 
                 </div>
 
                 <div className='footerNote'>New to Taskify ? <Link className='link' to='/register' >Create an Account</Link></div>
 
             </div>
-
-            <Snackbar className='snackbar'
-                open={openSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                autoHideDuration={5000}
-                onClose={handleClose}>
-                <SnackbarContent
-                    style={{
-                        fontSize: '12px',
-                        fontFamily: 'Raleway',
-                        minWidth: 'fit-content'
-                    }}
-                    message={snackbarMessage}
-                />
-            </Snackbar>
 
         </div>
     )

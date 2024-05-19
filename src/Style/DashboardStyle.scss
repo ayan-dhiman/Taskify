@@ -6,21 +6,119 @@
     width: 100vw;
     height: 100vh;
 
+    &.light{
+
+        .lProgress{
+            background-color: $loading-bar-bg-color-light;
+        }
+    
+        .dashboardHeader {
+            background-color: $main-header-background-color-light;
+            border-top: $border-top-light;
+
+            .topBar{
+    
+                .appName{
+    
+                    p{
+                        color: $main-header-font-color-light;
+                    }
+    
+                    .logo{
+                        color: $main-header-font-color-light;
+                    }
+    
+                }
+    
+                .loggedUser{
+    
+                    p{
+                        color: $main-header-font-color-light;
+                    }
+    
+                    .menuIcon{
+                        color: $main-header-font-color-light;
+                    }
+    
+                }
+    
+            }        
+    
+        }
+    
+        .dashboardBody{
+            background-color: $main-body-background-color-light;
+    
+        }
+
+    }
+
+    &.dark{
+
+        .lProgress {
+            background-color: $loading-bar-bg-color-dark;
+        }
+    
+        .dashboardHeader {
+            background-color: $main-header-background-color-dark;
+            border-top: $border-top-dark;
+
+            .topBar{
+    
+                .appName{
+    
+                    p{
+                        color: $main-header-font-color-dark;
+                    }
+    
+                    .logo{
+                        color: $main-header-font-color-dark;
+                    }
+    
+                }
+    
+                .loggedUser{
+    
+                    p{
+                        color: $main-header-font-color-dark;
+                    }
+    
+                    .menuIcon{
+                        color: $main-header-font-color-dark;
+                    }
+    
+                }
+    
+            }        
+    
+        }
+    
+        .dashboardBody{
+            background-color: $main-body-background-color-dark;
+    
+        }
+
+    }
+
+    .lProgress {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        height: 4px;
+        z-index: 2;
+    }
+
     .dashboardHeader {
         height: fit-content;
-        background-color: $main-header-background-color;
-        //background-color: rgb(42, 145, 235);
-        border-top: $border-top;
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        //color: $main-header-font-color;
         color: white;
         padding: 1px 0 1px 0;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
+        z-index: 0;
         .topBar{
             width: 90vw;
             display: flex;
@@ -35,15 +133,10 @@
                 align-items: center;
                 justify-content: center;
 
-                p{
-                    color: $main-header-font-color;
-                }
-
                 .logo{
                     z-index: 2;
                     width: 30px;
                     height: 30px;
-                    color: $main-header-font-color;
                 }
 
             }
@@ -57,13 +150,11 @@
                 gap: 5px;
 
                 p{
-                    color: $main-header-font-color;
                     font-size: 14px;
                 }
 
                 .menuIcon{
                     font-size: 14px;
-                    color: $main-header-font-color;
                     cursor: pointer;
                 }
 
@@ -83,10 +174,7 @@
         flex-direction: column;
         height: 100%;
         width: inherit;
-
         padding-top: 10px;
-
-        background-color: $main-body-background-color;
 
         .widgetRow{
 

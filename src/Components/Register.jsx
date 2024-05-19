@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, LinearProgress, Snackbar, SnackbarContent, Stepper, Step, StepLabel, Typography } from '@mui/material';
 import axios from 'axios';
 import '../Style/Register.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 
 function Register() {
     const [activeStep, setActiveStep] = useState(0);
@@ -13,11 +15,17 @@ function Register() {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const steps = ['Name', 'Email', 'Password', 'Role'];
+    const steps = ['Name', 'Email', 'Password'];
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const theme = useSelector(state => state.theme.theme);
     
     const apiUrl = process.env.REACT_APP_API_URL;
     const authUrl = process.env.REACT_APP_AUTH_URL;
+
+    const handleTheme = () => {
+        dispatch({ type: 'SET_THEME'});
+    }
 
     const handleClick = (message) => {
         setSnackbarMessage(message);
@@ -65,13 +73,14 @@ function Register() {
                 handleClick('Password must be at least 6 characters long');
                 return false;
             }
-        } else if (activeStep === 3) {
-
-            if (!role.trim()) {
-                handleClick('Please select a role');
-                return false;
-            }
         }
+        // } else if (activeStep === 3) {
+
+        //     if (!role.trim()) {
+        //         handleClick('Please select a role');
+        //         return false;
+        //     }
+        // }
         return true;
     };
 
@@ -112,7 +121,7 @@ function Register() {
 
         setLoading(true);
         console.log(name, email, password, role);
-        axios.post(`${authUrl}/register`, { name, email, password, role })
+        axios.post(`${authUrl}/register`, { name, email, password })
             .then(response => {
                 setLoading(false);
                 navigate("/login");
@@ -149,9 +158,11 @@ function Register() {
     };
 
     return (
-        <div className='registerContainer' >
+        <div className={`registerContainer ${theme === 'light' ? 'light' : 'dark'}`} >
 
             {loading && <LinearProgress className='lProgress' />}
+
+            <ContrastOutlinedIcon onClick={handleTheme} />
 
             <div className="registerBox">
 
@@ -182,13 +193,6 @@ function Register() {
                                     {activeStep === 0 && <input type="text" value={name} onChange={handleNameChange} />}
                                     {activeStep === 1 && <input type="text" value={email} onChange={handleEmailChange} />}
                                     {activeStep === 2 && <input type="password" value={password} onChange={handlePasswordChange} />}
-                                    {activeStep === 3 && (
-                                        <select value={role} onChange={handleRoleChange} className='select' >
-                                            <option value="">Select Role</option>
-                                            <option value="DSM Lead">DSM Lead</option>
-                                            <option value="DSM Member">DSM Member</option>
-                                        </select>
-                                    )}
                                 </div>
                                 <div className='buttons' >
                                     <Button disabled={activeStep === 0} onClick={handleBack} className='button' >Back</Button>
@@ -229,3 +233,11 @@ function Register() {
 }
 
 export default Register;
+
+{/* {activeStep === 3 && (
+                                        <select value={role} onChange={handleRoleChange} className='select' >
+                                            <option value="">Select Role</option>
+                                            <option value="DSM Lead">DSM Lead</option>
+                                            <option value="DSM Member">DSM Member</option>
+                                        </select>
+                                    )} */}

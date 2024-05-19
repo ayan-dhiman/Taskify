@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
+import { useSelector } from 'react-redux';
 
-function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }) {
+function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment }) {
+
+    const theme = useSelector(state => state.theme.theme);
 
     return (
         <Dialog
             open={open}
             onClose={handleClose}
-            className='addTaskDilogContainer'
+            className={`addTaskDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addTaskDilog' >
                 <div className='dialogTitle'>
@@ -27,6 +30,28 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }
                         className='newTaskInput'
                         value={newTask}
                         onChange={(event) => setNewTask(event.target.value)}
+                    />
+
+                    <select
+                        className='select'
+                        value={newTeam}
+                        onChange={(e) => setNewTeam(e.target.value)}
+                        
+                    >
+                        <option value="" disabled>Select Team / Group</option>
+                        {teams.map((team) => (
+                            <option value={team.name}>
+                                {team.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <input
+                        type='text'
+                        placeholder='Add comment (Optional)'
+                        className='newTaskInput'
+                        value={newComment}
+                        onChange={(event) => setNewComment(event.target.value)}
                     />
 
                 </div>

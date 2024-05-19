@@ -1,62 +1,79 @@
-// $main-header-background-color: white;
-// $main-header-font-color: black;
+$main-header-background-color-light: white;
 
-// $main-body-background-color: rgb(254, 254, 254);
-// $main-body-font-color: black;
+$main-header-font-color-light: black;
 
-// $border-top: 4px solid rgb(42, 145, 235);
+$main-body-background-color-light: rgb(254, 254, 254);
 
-// $widget-header-background-color: white;
-// $widget-header-font-color: black;
+$main-body-font-color-light: black;
 
-// $widget-body-background-color: white;
-// $widget-body-font-color: black;
+$border-top-light: 4px solid rgb(42, 145, 235);
 
-// $Task-Queue-Widget-Selected-Row-Background-Color: rgba(0, 0, 0, 0.203);
-// $Task-Queue-Widget-Selected-Row-Hover-Background-Color:rgba(0, 0, 0, 0.203) !important;
+$widget-header-background-color-light: white;
 
-// $Task-Queue-Widget-Row-Background-Color: rgba(128, 128, 128, 0.097);
-// $Task-Queue-Widget-Row-Hover-Background-Color: rgba(128, 128, 128, 0.097);
+$widget-header-font-color-light: black;
 
-// $widget-box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+$widget-body-background-color-light: white;
 
-// $widget-header-bottom-border: rgba(1, 1, 1, 0.2);
+$widget-body-font-color-light: black;
 
-// $widget-header-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+$Task-Queue-Widget-Selected-Row-Background-Color-light: rgba(0, 0, 0, 0.203);
 
-// $widget-border-color: rgba(0, 0, 0, 0.101);
+$Task-Queue-Widget-Selected-Row-Hover-Background-Color-light:rgba(0, 0, 0, 0.203) !important;
 
-// $button-bg-color: rgb(42, 145, 235);
+$Task-Queue-Widget-Row-Background-Color-light: rgba(128, 128, 128, 0.097);
 
-$button-font-color: white;//-----------
+$Task-Queue-Widget-Row-Hover-Background-Color-light: rgba(128, 128, 128, 0.097);
 
-$button-bg-color: #5a4c8d;
+$widget-box-shadow-light: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 
-$main-header-background-color: #010409;
-$main-header-font-color: white;
+$widget-header-bottom-border-light: rgba(1, 1, 1, 0.2);
 
-$border-top: 4px solid #5a4c8d;
+$widget-header-box-shadow-light: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 
-$main-body-background-color: #171717;
-//#0d1117
-$main-body-font-color: white;
+$widget-border-color-light: rgba(0, 0, 0, 0.101);
 
-$widget-header-background-color: #161b22;
-$widget-header-font-color: white;
+$button-bg-color-light: #2a91eb;
 
-$widget-body-background-color: black;
-$widget-body-font-color: white;
+$loading-bar-bg-color-light: #b5d4ef;
 
-$Task-Queue-Widget-Selected-Row-Background-Color: rgba(106, 106, 106, 0.367);
-$Task-Queue-Widget-Selected-Row-Hover-Background-Color:rgba(106, 106, 106, 0.367) !important;
+$button-font-color-light: #ffffff;
 
-$Task-Queue-Widget-Row-Background-Color: rgba(128, 128, 128, 0.097);
-$Task-Queue-Widget-Row-Hover-Background-Color: rgba(128, 128, 128, 0.097);
+$button-font-color-dark: white;
 
-$widget-box-shadow: rgba(255, 255, 255, 0.12) 0px 1px 3px, rgba(255, 255, 255, 0.24) 0px 1px 2px;
+$button-bg-color-dark: #5a4c8d;
 
-$widget-header-bottom-border: rgba(255, 255, 255, 0.2);
+$loading-bar-bg-color-dark: #b4acce;
 
-$widget-header-box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 3px 0px, rgba(255, 255, 255, 0.06) 0px 1px 2px 0px;
+$main-header-background-color-dark: #010409;
 
-$widget-border-color: rgba(255, 255, 255, 0.101);
+$main-header-font-color-dark: white;
+
+$border-top-dark: 4px solid #5a4c8d;
+
+$main-body-background-color-dark: #171717;
+
+$main-body-font-color-dark: white;
+
+$widget-header-background-color-dark: #161b22;
+
+$widget-header-font-color-dark: white;
+
+$widget-body-background-color-dark: black;
+
+$widget-body-font-color-dark: white;
+
+$Task-Queue-Widget-Selected-Row-Background-Color-dark: rgba(106, 106, 106, 0.367);
+
+$Task-Queue-Widget-Selected-Row-Hover-Background-Color-dark:rgba(106, 106, 106, 0.367) !important;
+
+$Task-Queue-Widget-Row-Background-Color-dark: rgba(128, 128, 128, 0.097);
+
+$Task-Queue-Widget-Row-Hover-Background-Color-dark: rgba(128, 128, 128, 0.097);
+
+$widget-box-shadow-dark: rgba(255, 255, 255, 0.12) 0px 1px 3px, rgba(255, 255, 255, 0.24) 0px 1px 2px;
+
+$widget-header-bottom-border-dark: rgba(255, 255, 255, 0.2);
+
+$widget-header-box-shadow-dark: rgba(255, 255, 255, 0.1) 0px 1px 3px 0px, rgba(255, 255, 255, 0.06) 0px 1px 2px 0px;
+
+$widget-border-color-dark: rgba(255, 255, 255, 0.101);

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import '../Style/DashboardStyle.scss';
 import logo from '../Assets/taskify.png';
-import { Avatar, Menu, MenuItem } from '@mui/material';
+import { Avatar, Menu, MenuItem, LinearProgress } from '@mui/material';
 import DateComponent from './Sub-Components/DateComponet';
 import TaskQueue from './Widgets/TaskQueue';
 import NotificationCenter from './Widgets/NotificationCenter';
@@ -25,6 +25,9 @@ function Dashboard() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const theme = useSelector(state => state.theme.theme);
+  const dispatch = useDispatch();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -38,15 +41,24 @@ function Dashboard() {
     navigate('/login');
   }
 
-  const toggleTheme = () => {
-    
-  };
+  const handleTheme = () => {
+    dispatch({ type: 'SET_THEME' });
+  }
 
   return (
-    <div className='dashboardContainer' >
-
-      <div className="dashboardHeader">
-
+    <div className={`dashboardContainer ${theme === 'light' ? 'light' : 'dark'}`} >
+      <div className="dashboardHeader" style={{
+        borderTop: loading ? 'none' : (theme === 'light' ? '4px solid #2a91eb' : '4px solid #5a4c8d' ),
+        paddingTop: loading ? '5px' : '1px',
+      }} >
+        {loading && <LinearProgress className='lProgress' sx={{
+          '.css-5ir5xx-MuiLinearProgress-bar1': {
+            backgroundColor: (theme === 'light' ? '#2a91eb' : '#5a4c8d' )
+          },
+          '.css-1r8wrcl-MuiLinearProgress-bar2': {
+            backgroundColor: (theme === 'light' ? '#2a91eb' : '#5a4c8d' )
+          }
+        }} />}
         <div className="topBar">
 
           <div className="appName">
@@ -64,13 +76,13 @@ function Dashboard() {
             <p>Hi {loggedUser} !</p>
             <KeyboardArrowDownOutlinedIcon onClick={handleMenu} className='menuIcon' />
 
-            {isMenuOpen && (
+            {/* {isMenuOpen && (
               <div className="dropdown-menu">
-                
+
                 <div className="menu-item" onClick={handleLogout}>Logout</div>
-                
+
               </div>
-            )}
+            )} */}
 
             <Menu
               anchorEl={anchorEl}
@@ -89,24 +101,24 @@ function Dashboard() {
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
               <MenuItem
-                onClick={toggleTheme}
+                onClick={handleTheme}
                 sx={{
                   fontSize: '14px', // Font size
                   height: '10px', // Height
-                  padding:'10px',
+                  padding: '10px',
                   margin: '5px 0px',
                   fontFamily: 'Raleway',
                   gap: '10px'
                 }}
               >
-                <ContrastOutlinedIcon className='MenuItemIcon' />Theme
+                <ContrastOutlinedIcon className='MenuItemIcon' /> {theme === 'light' ? 'Dark' : 'Light'}
               </MenuItem>
               <MenuItem
                 //onClick={handleLogout}
                 sx={{
                   fontSize: '14px', // Font size
                   height: '10px', // Height
-                  padding:'10px',
+                  padding: '10px',
                   margin: '5px 0px',
                   fontFamily: 'Raleway',
                   gap: '10px'
@@ -119,7 +131,7 @@ function Dashboard() {
                 sx={{
                   fontSize: '14px', // Font size
                   height: '10px', // Height
-                  padding:'10px',
+                  padding: '10px',
                   margin: '5px 0px',
                   fontFamily: 'Raleway',
                   gap: '10px'
@@ -132,12 +144,12 @@ function Dashboard() {
                 sx={{
                   fontSize: '14px',
                   height: '10px',
-                  padding:'10px',
+                  padding: '10px',
                   fontFamily: 'Raleway',
                   margin: '5px 0px',
                   gap: '10px',
                   '&:hover': {
-                    backgroundColor: 'red'
+                    backgroundColor: '#ff000019'
                   },
                 }}
               >
@@ -159,7 +171,7 @@ function Dashboard() {
 
         <div className="widgetRow">
 
-          <TaskQueue />
+          <TaskQueue loading={loading} setLoading={setLoading} />
 
           <NotificationCenter />
 

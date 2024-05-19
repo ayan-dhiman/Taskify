@@ -6,7 +6,7 @@ const ProgressBar = ({ progress }) => {
         <div className="progress-bar-container">
             <div
                 className="progress-bar"
-                style={{ '--progress-width': progress, 'width': progress }}
+                style={{ '--progress-width': progress, 'width':`${progress}%` }}
             >
             </div>
         </div>

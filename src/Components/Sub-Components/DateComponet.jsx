@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../../Style/DateComponent.scss';
+import { useSelector } from 'react-redux';
 
 const DateComponent = () => {
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
+    const theme = useSelector(state => state.theme.theme);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -13,14 +15,14 @@ const DateComponent = () => {
     }, []); // Run only once when component mounts
 
     const formattedDate = currentDateTime.toLocaleString('en-US', {
-        weekday: 'long', // Full name of the day (e.g., Thursday)
-        month: 'long', // Full name of the month (e.g., May)
-        day: 'numeric', // Day of the month (e.g., 9)
-        year: 'numeric' // Full year (e.g., 2024)
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
     });
 
     return (
-        <div className="date-container">
+        <div className={`date-container ${theme === 'light' ? 'light' : 'dark'}`} >
             <p>{formattedDate}</p>
         </div>
     );
