@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 
@@ -7,6 +7,11 @@ import ProgressBar from '../Sub-Components/ProgressBar';
 
 import '../../Style/TeamsOverview.scss';
 import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
+
+import { UseAddTeam } from '../../Hooks/UseAddTeam';
+import { Button } from '@mui/material';
+
+import AddTeamDialog from '../Sub-Components/AddTeamDilog';
 
 function TeamsOverview() {
 
@@ -20,9 +25,26 @@ function TeamsOverview() {
 
   const theme = useSelector(state => state.theme.theme);
 
+  const dispatch = useDispatch();
+
   const [TasksByTeam, setTasksByTeam] = useState([]);
 
+  const [openAddTeamDialog, setOpenAddTeamDialog] = useState(false);
+
+  const [newTeam, setNewTeam] = useState('');
+
   const fetchTasks = UseFetchTasks(apiUrl, userId, token);
+
+  const addTeam = UseAddTeam(apiUrl, userId, token);
+
+  const handleAddTeamDialogClose = () => {
+    setOpenAddTeamDialog(false);
+    dispatch({ type: 'SET_OPEN', payload: false });
+  };
+
+  const handleAddTeamDilogOpen = () => {
+    setOpenAddTeamDialog(true);
+  };
 
   const columns = [
     { field: 'team' },
@@ -62,22 +84,31 @@ function TeamsOverview() {
 
   };
 
+  const handleAddTeam = () => {
+
+    addTeam(newTeam);
+
+    setOpenAddTeamDialog(false);
+
+  }
+
   useEffect(() => {
     groupTasksByTeam();
-  }, );
+  }, []);
 
   return (
     <div className={`TeamOverviewWgt ${theme === 'light' ? 'light' : 'dark'}`}>
       <div className="widget-header">
         <>TEAM / GROUP OVERVIEW</>
         <div className='buttons' >
+          <Button variant="outlined" className='addButton' onClick={handleAddTeamDilogOpen}>Add</Button>
           <CachedOutlinedIcon className='icon' onClick={fetchTasks} />
         </div>
       </div>
       <div className="widget-body">
         <table className="grid">
           <tbody>
-          {TasksByTeam.map((row, rowIndex) => (
+            {TasksByTeam.map((row, rowIndex) => (
               <tr key={rowIndex} className="grid-row">
                 {columns.map((column) => (
                   <td key={column.field} id={`td-${column.field}`} className="grid-cell">
@@ -87,7 +118,7 @@ function TeamsOverview() {
                       `${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
                     ) : column.field === 'percentage' ? (
                       `${row[column.field]} %`
-                    ): (
+                    ) : (
                       row[column.field]
                     )}
                   </td>
@@ -97,6 +128,15 @@ function TeamsOverview() {
           </tbody>
         </table>
       </div>
+
+      <AddTeamDialog
+        openAddTeamDialog={openAddTeamDialog}
+        handleAddTeamDialogClose={handleAddTeamDialogClose}
+        handleAddTeam={handleAddTeam}
+        newTeam={newTeam}
+        setNewTeam={setNewTeam}
+      />
+
     </div>
   )
 }

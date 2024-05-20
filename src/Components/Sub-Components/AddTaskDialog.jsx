@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
 import { useSelector } from 'react-redux';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment }) {
 
     const theme = useSelector(state => state.theme.theme);
+
+    const handleEditTask = (teamId) => {
+        console.log(teamId);
+    }
 
     return (
         <Dialog
@@ -36,7 +41,7 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, 
                         className='select'
                         value={newTeam}
                         onChange={(e) => setNewTeam(e.target.value)}
-                        
+
                     >
                         <option value="" disabled>Select Team / Group</option>
                         {teams.map((team) => (
