@@ -12,6 +12,7 @@ export const UseFetchTasks = (apiUrl, userId, token) => {
     };
 
     const fetchTasks = async () => {
+        console.log("Fetch Task Called");
         try {
             const response = await axios.get(`${apiUrl}/tasks/${userId}`, {
                 headers: {

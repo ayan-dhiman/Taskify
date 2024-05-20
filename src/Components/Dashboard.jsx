@@ -179,11 +179,11 @@ function Dashboard() {
 
         <div className="widgetRow">
 
-          <WeakBreakdown />
+          {/* <WeakBreakdown />
 
           <TeamsOverView />
 
-          <Activity />
+          <Activity /> */}
 
         </div>
 

@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
-import '../../Style/WeakBreakdown.scss';
-import ProgressBar from '../Sub-Components/ProgressBar';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { startOfWeek, addDays, format } from 'date-fns';
+
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
+
+import ProgressBar from '../Sub-Components/ProgressBar';
 import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
 
-function WeakBreakdown() {
+import '../../Style/WeakBreakdown.scss';
 
+const WeakBreakdown = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
-
   const userId = useSelector(state => state.auth.loggedUser.id);
-
   const token = useSelector(state => state.auth.token);
-
   const tasks = useSelector(state => state.tasks.tasks);
-
   const theme = useSelector(state => state.theme.theme);
 
-  const [TasksByWeek, setTasksByWeek] = useState([]);
+  const [tasksByWeek, setTasksByWeek] = useState([]);
 
   const fetchTasks = UseFetchTasks(apiUrl, userId, token);
 
   const columns = [
-    { field: 'day' },
-    { field: 'date' },
-    { field: 'progressbar' },
-    { field: 'percentage' },
-    { field: 'overview' }
+    { field: 'day', label: 'Day' },
+    { field: 'date', label: 'Date' },
+    { field: 'progressbar', label: 'Progress' },
+    { field: 'percentage', label: 'Completion' },
+    { field: 'overview', label: 'Status Overview' }
   ];
 
-  const groupTasksByDay = () => {
+  const groupTasksByDay = useCallback(() => {
     const startOfWeekDate = startOfWeek(new Date(), { weekStartsOn: 1 });
     const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
       const date = addDays(startOfWeekDate, i);
@@ -39,11 +36,7 @@ function WeakBreakdown() {
         day: format(date, 'EEEE'),
         date: format(date, 'yyyy-MM-dd'),
         tasks: [],
-        statusCounts: {
-          ToDo: 0,
-          'In Progress': 0,
-          Completed: 0
-        },
+        statusCounts: { ToDo: 0, 'In Progress': 0, Completed: 0 },
         percentage: 0
       };
     });
@@ -64,33 +57,33 @@ function WeakBreakdown() {
     });
 
     setTasksByWeek(daysOfWeek);
-  };
+  }, [tasks]);
 
   useEffect(() => {
     groupTasksByDay();
-  },);
+  }, [tasks, groupTasksByDay]);
 
   return (
-    <div className={`WeakBreakdownWgt ${theme === 'light' ? 'light' : 'dark'}`} >
+    <div className={`WeakBreakdownWgt ${theme === 'light' ? 'light' : 'dark'}`}>
       <div className="wb-widget-header">
-        <>WEAK BREAKDOWN</>
-        <div className='buttons' >
+        <span>WEAK BREAKDOWN</span>
+        <div className='buttons'>
           <CachedOutlinedIcon className='icon' onClick={fetchTasks} />
         </div>
       </div>
       <div className="wb-widget-body">
         <table className="wb-grid">
           <tbody>
-            {TasksByWeek.map((row, rowIndex) => (
+            {tasksByWeek.map((row, rowIndex) => (
               <tr key={rowIndex} className="wb-grid-row">
                 {columns.map((column) => (
-                  <td key={column.field} id={`td-${column.field}`} className="wb-grid-cell">
+                  <td key={column.field} className="wb-grid-cell">
                     {column.field === 'progressbar' ? (
                       <ProgressBar progress={row.percentage} />
                     ) : column.field === 'overview' ? (
                       `${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
                     ) : column.field === 'percentage' ? (
-                      `${row[column.field]} %`
+                      `${row[column.field]}%`
                     ) : (
                       row[column.field]
                     )}
@@ -102,7 +95,7 @@ function WeakBreakdown() {
         </table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default WeakBreakdown
+export default WeakBreakdown;

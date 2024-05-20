@@ -13,8 +13,10 @@ export const UseFetchTeams = (apiUrl, userId, token) => {
 
     const fetchTeams = async () => {
 
+        console.log("Fetching Teams");
+
         try {
-            const response = await axios.get(`${apiUrl}/teams`, {
+            const response = await axios.get(`${apiUrl}/teams/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

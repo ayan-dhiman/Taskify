@@ -5,25 +5,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, LinearProgress, Stepper, Step, StepLabel, Typography } from '@mui/material';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 
-import { UseAddUser } from '../Hooks/UseAddUser';
+import { UseUpdateUser } from '../Hooks/UseUpdateUser';
 import useAlert from '../Hooks/UseAlert';
 import { UseVerifyEmail } from '../Hooks/UseVerifyEmail';
 
 import '../Style/Register.scss';
 
-function Register() {
+function ForgotPassword() {
     const theme = useSelector(state => state.theme.theme);
 
     const [activeStep, setActiveStep] = useState(0);
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [verifyPassword, setVerifyPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const steps = ['Name', 'Email', 'Password'];
+    const steps = ['Registered Email', 'New Password', 'Verify Password'];
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const addUser = UseAddUser();
+    const updatePassword = UseUpdateUser();
     const verifyEmail = UseVerifyEmail();
     const alert = useAlert();
 
@@ -34,16 +34,6 @@ function Register() {
     const validateInput = async () => {
         switch (activeStep) {
             case 0:
-                if (!name.trim()) {
-                    alert('Name cannot be blank');
-                    return false;
-                }
-                if (!name.match(/^[a-zA-Z\s]+$/)) {
-                    alert('Name should only contain alphabets');
-                    return false;
-                }
-                break;
-            case 1:
                 if (!email.trim()) {
                     alert('Email cannot be blank');
                     return false;
@@ -52,18 +42,32 @@ function Register() {
                     alert('Please enter a valid email address');
                     return false;
                 }
-                if (await handleVerifyEmail(email)) {
-                    alert('Email is already registered!');
+                if (!await handleVerifyEmail(email)) {
+                    alert('Email is not registered!');
+                    return false;
+                }
+                break;
+            case 1:
+                if (!newPassword.trim()) {
+                    alert('Password cannot be blank');
+                    return false;
+                }
+                if (newPassword.trim().length < 6) {
+                    alert('Password must be at least 6 characters long');
                     return false;
                 }
                 break;
             case 2:
-                if (!password.trim()) {
+                if (!verifyPassword.trim()) {
                     alert('Password cannot be blank');
                     return false;
                 }
-                if (password.trim().length < 6) {
+                if (verifyPassword.trim().length < 6) {
                     alert('Password must be at least 6 characters long');
+                    return false;
+                }
+                if (verifyPassword !== newPassword) {
+                    alert('Passwords do not match');
                     return false;
                 }
                 break;
@@ -85,12 +89,12 @@ function Register() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleRegister = async () => {
+    const handleChangePassword = async () => {
         if (await validateInput()) {
             setLoading(true);
             try {
-                await addUser({ name, email, password });
-                navigate('/login');
+                //await updatePassword({password: newPassword});
+                //navigate('/login');
             } catch (error) {
                 handleRegisterError(error);
             } finally {
@@ -102,7 +106,7 @@ function Register() {
     const handleRegisterError = (error) => {
         if (error.response) {
             const { status } = error.response;
-            alert(status === 401 ? 'Unauthorized: Please enter a valid email and password.' : 'An error occurred while processing your request. Please try again later.');
+            alert(status === 401 ? 'Unauthorized' : 'An error occurred while processing your request. Please try again later.');
         } else if (error.request) {
             alert('Network Error: Please check your internet connection.');
         } else {
@@ -125,11 +129,11 @@ function Register() {
     const renderStepContent = (step) => {
         switch (step) {
             case 0:
-                return <input type="text" value={name} onChange={(e) => setName(e.target.value)} />;
-            case 1:
                 return <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />;
+            case 1:
+                return <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />;
             case 2:
-                return <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />;
+                return <input type="password" value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} />;
             default:
                 return null;
         }
@@ -148,7 +152,7 @@ function Register() {
             <ContrastOutlinedIcon onClick={handleTheme} />
             <div className="registerBox">
                 <div className="headerContainer">
-                    <h1>Register to Taskify</h1>
+                    <h1>Forgot Password</h1>
                 </div>
                 <div className="bodyContainer">
                     <Stepper activeStep={activeStep} alternativeLabel className='registerStepper'>
@@ -169,8 +173,8 @@ function Register() {
                                 </div>
                                 <div className='buttons'>
                                     <Button disabled={activeStep === 0} onClick={handleBack} className='button'>Back</Button>
-                                    <Button variant="contained" className='containedButton' color="primary" onClick={activeStep === steps.length - 1 ? handleRegister : handleNext}>
-                                        {activeStep === steps.length - 1 ? 'Register' : 'Next'}
+                                    <Button variant="contained" className='containedButton' color="primary" onClick={activeStep === steps.length - 1 ? handleChangePassword : handleNext}>
+                                        {activeStep === steps.length - 1 ? 'Change Password' : 'Next'}
                                     </Button>
                                 </div>
                             </div>
@@ -185,4 +189,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default ForgotPassword;
