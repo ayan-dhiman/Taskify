@@ -77,7 +77,7 @@ const WeakBreakdown = () => {
             {tasksByWeek.map((row, rowIndex) => (
               <tr key={rowIndex} className="wb-grid-row">
                 {columns.map((column) => (
-                  <td key={column.field} className="wb-grid-cell">
+                  <td key={column.field} id={`td-${column.field}`} className="wb-grid-cell">
                     {column.field === 'progressbar' ? (
                       <ProgressBar progress={row.percentage} />
                     ) : column.field === 'overview' ? (

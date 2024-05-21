@@ -124,7 +124,7 @@ const TeamsOverview = () => {
             {tasksByTeam.map((row, rowIndex) => (
               <tr key={rowIndex} className="grid-row">
                 {columns.map((column) => (
-                  <td key={column.field} className="grid-cell">
+                  <td key={column.field} id={`td-${column.field}`} className="grid-cell">
                     {column.field === 'progressbar' ? (
                       <ProgressBar progress={row.percentage} />
                     ) : column.field === 'overview' ? (
