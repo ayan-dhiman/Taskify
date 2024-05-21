@@ -1,7 +1,6 @@
 const initialState = {
     tasks: [],
-    teams: [],
-    activity: []
+    teams: []
 };
 
 const tasksReducer = (state = initialState, action) => {
@@ -15,11 +14,6 @@ const tasksReducer = (state = initialState, action) => {
             return {
                 ...state,
                 teams: action.payload
-            };
-        case 'SET_ACTIVITY':
-            return {
-                ...state,
-                activity: action.payload
             };
         default:
             return state;

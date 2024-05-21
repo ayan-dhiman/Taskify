@@ -24,12 +24,7 @@ import '../../Style/TaskQueue.scss';
 
 function TaskQueue({ loading, setLoading }) {
 
-    const apiUrl = process.env.REACT_APP_API_URL;
-
-
     const userId = useSelector(state => state.auth.loggedUser.id);
-
-    const token = useSelector(state => state.auth.token);
 
     const theme = useSelector(state => state.theme.theme);
 
@@ -40,15 +35,15 @@ function TaskQueue({ loading, setLoading }) {
 
     const dispatch = useDispatch();
 
-    const fetchTasks = UseFetchTasks(apiUrl, userId, token);
+    const fetchTasks = UseFetchTasks();
 
-    const fetchTeams = UseFetchTeams(apiUrl, userId, token);
+    const fetchTeams = UseFetchTeams();
 
-    const addTask = UseAddTask(apiUrl, userId, token);
+    const addTask = UseAddTask();
 
-    const updateTask = UseUpdateTask(apiUrl, userId, token);
+    const updateTask = UseUpdateTask();
 
-    const deleteTask = UseDeleteTask(apiUrl, userId, token);
+    const deleteTask = UseDeleteTask();
 
 
     const [selectedRows, setSelectedRows] = useState([]);
@@ -138,7 +133,7 @@ function TaskQueue({ loading, setLoading }) {
         dispatch({ type: 'SET_OPEN', payload: false });
     };
 
-    const handleAddTask = () => {
+    const handleAddTask = async () => {
         setLoading(true);
         dispatch({ type: 'SET_OPEN', payload: false });
 
@@ -163,10 +158,17 @@ function TaskQueue({ loading, setLoading }) {
             comment: newComment
         }
 
-        addTask(newTaskBody);
-        setNewTask('');
-        handleAddTaskDilogClose();
-        setLoading(false);
+        try {
+
+            await addTask(newTaskBody);;
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setNewTask('');
+            handleAddTaskDilogClose();
+            setLoading(false);
+        }
+
     };
 
     //-----------------------------------------------------------------------------
@@ -186,12 +188,16 @@ function TaskQueue({ loading, setLoading }) {
 
         setLoading(true);
 
-        updateTask(taskId, {task: updatedTask} );
+        try {
+            await updateTask(taskId, { task: updatedTask });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setUpdatedTask('');
+            setLoading(false);
+            setOpenUpdateDialog(false);
+        }
 
-        setLoading(false);
-
-        setOpenUpdateDialog(false);
-        
     };
 
     //--------------------------------------------------------------------------
@@ -214,11 +220,18 @@ function TaskQueue({ loading, setLoading }) {
             return;
         }
 
-        updateTask(taskIdForComment, { comment: newComment } );
+        try {
+            await updateTask(taskIdForComment, { comment: newComment });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setNewComment('');
+            handleCommentDialogClose();
+            fetchTasks();
+            setLoading(false);
+        }
 
-        setNewComment('');
-        handleCommentDialogClose();
-        setLoading(false);
+
     };
 
     const handleCommentClickOpen = (taskId) => {
@@ -230,7 +243,7 @@ function TaskQueue({ loading, setLoading }) {
 
     //Update Team Dilog Handlers------------------------------------------------
 
-    const handleUpdateTeam = () => {
+    const handleUpdateTeam = async () => {
 
         setLoading(true);
         dispatch({ type: 'SET_OPEN', payload: false });
@@ -240,13 +253,17 @@ function TaskQueue({ loading, setLoading }) {
             alert('Team cannot be blank');
             return;
         }
-
-        updateTask(taskToBeUpdated, { team: newTeam } );
-
-        setNewTask('');
-        handleUpdateTeamDialogClose();
-        fetchTasks();
-        setLoading(false);
+        
+        try {
+            await updateTask(taskToBeUpdated, { team: newTeam });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setNewTeam('');
+            handleUpdateTeamDialogClose();
+            fetchTasks();
+            setLoading(false);
+        }
 
     };
 
@@ -288,7 +305,7 @@ function TaskQueue({ loading, setLoading }) {
             const statusMatch = filterStatus ? row.status === filterStatus : true;
             return dateMatch && statusMatch;
         });
-        
+
         setFilteredRows(filteredData);
         handleFilterDialogClose();
     };
@@ -298,6 +315,21 @@ function TaskQueue({ loading, setLoading }) {
     };
 
     //-------------------------------------------------------------------------
+
+    const handleError = (error) => {
+        if (error.response) {
+            const { status } = error.response;
+            if (status === 401) {
+                alert('Unauthorized: Please enter a valid email and password.');
+            } else {
+                alert('An error occurred while processing your request. Please try again later.');
+            }
+        } else if (error.request) {
+            alert('Network Error: Please check your internet connection.');
+        } else {
+            alert('An error occurred. Please try again later.');
+        }
+    };
 
     const toggleRow = (rowIndex) => {
         if (expandedRow === rowIndex) {
@@ -315,21 +347,37 @@ function TaskQueue({ loading, setLoading }) {
         }
     };
 
-    const handleDeleteSelectedRows = () => {
+    const HandleDeleteTask = async (taskId) => {
+        try {
+            await deleteTask(taskId);
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
+    const handleDeleteSelectedRows = async () => {
         selectedRows.forEach(rowIndex => {
             const taskId = tasks[rowIndex].taskId;
-            deleteTask(taskId);
+
+            HandleDeleteTask(taskId);
+
         });
         setSelectedRows([]);
     };
 
-    const handleStatusChange = (taskId, newStatus) => {
+    const handleStatusChange = async (taskId, newStatus) => {
 
         setLoading(true);
 
-        updateTask(taskId, {status: newStatus} );
-
         setLoading(false);
+
+        try {
+            await updateTask(taskId, { status: newStatus });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLoading(false);
+        }
 
     };
 
@@ -344,7 +392,7 @@ function TaskQueue({ loading, setLoading }) {
     useEffect(() => {
         fetchTasks();
         fetchTeams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -431,7 +479,7 @@ function TaskQueue({ loading, setLoading }) {
                                                         </div>
 
                                                         <div className="buttons">
-                                                            
+
                                                             <Button variant="outlined" className='addCommentButton' onClick={() => handleTeamClickOpen(row.taskId)} >Update Team</Button>
                                                             <Button variant="outlined" className='addCommentButton' onClick={() => handleCommentClickOpen(row.taskId)}>Update Comment</Button>
 
@@ -499,7 +547,7 @@ function TaskQueue({ loading, setLoading }) {
                 openUpdateTeamDialog={openUpdateTeamDialog}
                 setNewTeam={setNewTeam}
                 taskId={taskToBeUpdated}
-                teams={teams}            
+                teams={teams}
             />
 
         </div>

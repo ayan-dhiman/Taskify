@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { UseFetchActivity } from './UseFetchActivity';
 
-export const UseFetchTeams = () => {
+export const UseFetchActivity = () => {
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -12,21 +11,19 @@ export const UseFetchTeams = () => {
 
     const dispatch = useDispatch();
 
-    const fetchActivity = UseFetchActivity();
-
-    const fetchTeams = async () => {
+    const fetchActivity = async () => {
         try {
-            const response = await axios.get(`${apiUrl}/teams/${userId}`, {
+            const response = await axios.get(`${apiUrl}/activities/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            dispatch({type: 'SET_TEAMS', payload: response.data});
-            fetchActivity();
+            const sortedData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            dispatch({type: 'SET_ACTIVITY', payload: sortedData});
         } catch (error) {
-            throw(error);
+           throw(error);
         };
     };
 
-    return fetchTeams;
+    return fetchActivity;
 };

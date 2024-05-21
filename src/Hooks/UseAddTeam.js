@@ -1,17 +1,14 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { UseFetchTeams } from './UseFetchTeams';
 
-export const UseAddTeam = (apiUrl, userId, token) => {
+export const UseAddTeam = () => {
 
-    const dispatch = useDispatch();
+    const apiUrl = process.env.REACT_APP_API_URL;
 
-    const fetchTeams = UseFetchTeams(apiUrl, userId, token);
+    const token = useSelector(state => state.auth.token);
 
-    const alert = (message) => {
-        dispatch({ type: 'SET_OPEN', payload: true });
-        dispatch({ type: 'SET_MESSAGE', payload: message });
-    };
+    const fetchTeams = UseFetchTeams();
 
     const addTeam = async (newTeam) => {
 
@@ -23,20 +20,7 @@ export const UseAddTeam = (apiUrl, userId, token) => {
             });
             fetchTeams();
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 401) {
-                    alert('Add Task - Unauthorized: Please enter a valid email and password.');
-                } else {
-                    console.error('Server Error:', error.response.data);
-                    alert('An error occurred while processing your request. Please try again later.');
-                }
-            } else if (error.request) {
-                console.error('Network Error:', error.request);
-                alert('Network Error: Please check your internet connection.');
-            } else {
-                console.error('Error:', error.message);
-                alert('An error occurred. Please try again later.');
-            }
+           throw(error);
         };
     };
 

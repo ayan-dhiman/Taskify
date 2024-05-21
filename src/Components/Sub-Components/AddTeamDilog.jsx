@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function AddTeamDilog({ openAddTeamDialog, handleAddTeamDialogClose, handleAddTeam, newTeam, setNewTeam }) {
 

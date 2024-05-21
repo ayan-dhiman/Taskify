@@ -23,7 +23,7 @@ function ForgotPassword() {
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const updatePassword = UseUpdateUser();
+    //const updatePassword = UseUpdateUser();
     const verifyEmail = UseVerifyEmail();
     const alert = useAlert();
 

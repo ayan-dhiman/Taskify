@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { UseFetchActivity } from './UseFetchActivity';
 
-export const UseFetchTasks = (apiUrl, userId, token) => {
+export const UseFetchTasks = () => {
+
+    const apiUrl = process.env.REACT_APP_API_URL;
+
+    const userId = useSelector(state => state.auth.loggedUser.id);
+
+    const token = useSelector(state => state.auth.token);
 
     const dispatch = useDispatch();
 
-    const alert = (message) => {
-        dispatch({ type: 'SET_OPEN', payload: true });
-        dispatch({ type: 'SET_MESSAGE', payload: message });
-    };
+    const fetchActivity = UseFetchActivity();
 
     const fetchTasks = async () => {
-        console.log("Fetch Task Called");
         try {
             const response = await axios.get(`${apiUrl}/tasks/${userId}`, {
                 headers: {
@@ -20,27 +22,11 @@ export const UseFetchTasks = (apiUrl, userId, token) => {
                 }
             });
             dispatch({type: 'SET_TASKS', payload: response.data.reverse()});
+            fetchActivity();
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 401) {
-                    alert('Team - Unauthorized: Please enter a valid email and password.');
-                } else {
-                    console.error('Server Error:', error.response.data);
-                    alert('An error occurred while processing your request. Please try again later.');
-                }
-            } else if (error.request) {
-                console.error('Network Error:', error.request);
-                alert('Network Error: Please check your internet connection.');
-            } else {
-                console.error('Error:', error.message);
-                alert('An error occurred. Please try again later.');
-            }
+           throw(error);
         };
     };
-
-    useEffect(() => {
-        fetchTasks();
-    }, [apiUrl, userId, token]);
 
     return fetchTasks;
 };

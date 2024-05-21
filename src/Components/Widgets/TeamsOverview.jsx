@@ -12,19 +12,22 @@ import AddTeamDialog from '../Sub-Components/AddTeamDilog';
 import '../../Style/TeamsOverview.scss';
 
 const TeamsOverview = () => {
-  const apiUrl = process.env.REACT_APP_API_URL;
+
   const userId = useSelector(state => state.auth.loggedUser.id);
-  const token = useSelector(state => state.auth.token);
   const tasks = useSelector(state => state.tasks.tasks);
   const theme = useSelector(state => state.theme.theme);
+
   const dispatch = useDispatch();
 
   const [tasksByTeam, setTasksByTeam] = useState([]);
+
   const [openAddTeamDialog, setOpenAddTeamDialog] = useState(false);
+
   const [newTeam, setNewTeam] = useState('');
 
-  const fetchTasks = UseFetchTasks(apiUrl, userId, token);
-  const addTeam = UseAddTeam(apiUrl, userId, token);
+  const fetchTasks = UseFetchTasks();
+
+  const addTeam = UseAddTeam();
 
   const handleAddTeamDialogClose = useCallback(() => {
     setOpenAddTeamDialog(false);
@@ -35,9 +38,30 @@ const TeamsOverview = () => {
     setOpenAddTeamDialog(true);
   };
 
-  const handleFetchTasks = () => {
-    fetchTasks();
+  const handleFetchTasks = async () => {
+
+    try {
+      await fetchTasks();
+    } catch (error) {
+      handleLoginError(error);
+    }
+
   }
+
+  const handleLoginError = (error) => {
+    if (error.response) {
+      const { status } = error.response;
+      if (status === 401) {
+        alert('Unauthorized: Please enter a valid email and password.');
+      } else {
+        alert('An error occurred while processing your request. Please try again later.');
+      }
+    } else if (error.request) {
+      alert('Network Error: Please check your internet connection.');
+    } else {
+      alert('An error occurred. Please try again later.');
+    }
+  };
 
   const groupTasksByTeam = useCallback(() => {
     const teams = tasks.reduce((acc, task) => {
@@ -60,18 +84,23 @@ const TeamsOverview = () => {
       const completedTasks = team.statusCounts.Completed;
       team.percentage = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
     });
-
     setTasksByTeam(Object.values(teams));
-  }, [tasks]);
+  }, [tasks, tasksByTeam]);
 
-  const handleAddTeam = () => {
-    addTeam(newTeam);
-    setOpenAddTeamDialog(false);
+  const handleAddTeam = async () => {
+
+    try {
+      await addTeam({ name: newTeam, userId: userId });
+    } catch (error) {
+      handleLoginError(error);
+    } finally {
+      setOpenAddTeamDialog(false);
+    }
   };
 
   useEffect(() => {
     groupTasksByTeam();
-  }, [tasks, groupTasksByTeam]);
+  }, [tasks]);
 
   const columns = [
     { field: 'team', label: 'Team' },

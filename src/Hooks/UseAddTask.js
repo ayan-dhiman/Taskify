@@ -1,17 +1,17 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { UseFetchActivity } from './UseFetchActivity';
 import { UseFetchTasks } from './UseFetchTasks';
 
-export const UseAddTask = (apiUrl, userId, token) => {
+export const UseAddTask = () => {
 
-    const dispatch = useDispatch();
+    const apiUrl = process.env.REACT_APP_API_URL;
 
-    const fetchTasks = UseFetchTasks(apiUrl, userId, token);
+    const token = useSelector(state => state.auth.token);
 
-    const alert = (message) => {
-        dispatch({ type: 'SET_OPEN', payload: true });
-        dispatch({ type: 'SET_MESSAGE', payload: message });
-    };
+    const fetchTasks = UseFetchTasks();
+
+    const fetchActivity = UseFetchActivity();
 
     const addTask = async (newTask) => {
 
@@ -23,20 +23,7 @@ export const UseAddTask = (apiUrl, userId, token) => {
             });
             fetchTasks();
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 401) {
-                    alert('Add Task - Unauthorized: Please enter a valid email and password.');
-                } else {
-                    console.error('Server Error:', error.response.data);
-                    alert('An error occurred while processing your request. Please try again later.');
-                }
-            } else if (error.request) {
-                console.error('Network Error:', error.request);
-                alert('Network Error: Please check your internet connection.');
-            } else {
-                console.error('Error:', error.message);
-                alert('An error occurred. Please try again later.');
-            }
+           throw(error);
         };
     };
 
