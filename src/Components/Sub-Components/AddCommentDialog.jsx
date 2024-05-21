@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+import React from 'react';
+import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
+import { useDispatch, useSelector } from 'react-redux';
 
 function AddCommentDialog({ openCommentDialog, handleCommentDialogClose, handleAddComment, newComment, setNewComment }) {
+
+    const theme = useSelector(state => state.theme.theme);
+
     return (
         <Dialog
             open={openCommentDialog}
             onClose={handleCommentDialogClose}
-            className='addCommentDilogContainer'
+            className={`addCommentDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addCommentDilog' >
                 <div className='dialogTitle'>
@@ -32,11 +36,11 @@ function AddCommentDialog({ openCommentDialog, handleCommentDialogClose, handleA
 
             </div>
 
-            <DialogActions>
-                <Button autoFocus onClick={handleCommentDialogClose} className='dialogButton' >
+            <DialogActions className='dialogAction'>
+                <Button variant="outlined" autoFocus onClick={handleCommentDialogClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button onClick={handleAddComment} className='dialogButton' >Add Comment</Button>
+                <Button variant="outlined" onClick={handleAddComment} className='dialogButton' >Add Comment</Button>
             </DialogActions>
         </Dialog>
     );

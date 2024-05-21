@@ -1,144 +1,306 @@
-.TQC{
+@import 'Variables';
+
+.TQC {
     width: 60%;
+
+    &.light {
+
+        .taskQueueWgt {
+            background-color: $widget-body-background-color-light;
+
+            .widget-header {
+                color: $widget-header-font-color-light;
+                border-top: $border-top-light;
+                box-shadow: $widget-box-shadow-light;
+                background-color: $widget-header-background-color-light;
+
+                .buttons {
+
+                    .addButton {
+                        background-color: $button-bg-color-light;
+                        color: $button-font-color-light;
+                        border-color: $button-bg-color-light;
+                    }
+
+                    .clearButton {
+                        background-color: $button-bg-color-light;
+                        color: $button-font-color-light;
+                        border-color: $button-bg-color-light;
+
+                    }
+
+                }
+
+            }
+
+            .widget-body {
+                .grid {
+                    color: $widget-body-font-color-light;
+
+                    .selected-row {
+                        background-color: $Task-Queue-Widget-Selected-Row-Background-Color-light;
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Selected-Row-Hover-Background-Color-light;
+                        }
+                    }
+
+                    .grid-row {
+                        border-bottom: 1px solid $widget-border-color-light;
+
+                        &.expanded-row {
+                            background-color: $Task-Queue-Widget-Row-Background-Color-light;
+                        }
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Row-Hover-Background-Color-light;
+                        }
+
+                        .grid-cell {
+
+                            .status-dropdown {
+                                color: $widget-body-font-color-light;
+                            }
+
+                            .status-dropdown option {
+                                background-color: $widget-header-background-color-light;
+                                color: $widget-header-font-color-light;
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                .accordion-content {
+
+                    .accordion-item {
+
+                        .headerContent {
+
+                            .buttons {
+
+                                .addCommentButton {
+                                    color: $button-font-color-light;
+                                    border-color: $button-bg-color-light;
+                                    background-color: $button-bg-color-light;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    &.dark {
+
+        .taskQueueWgt {
+            background-color: $widget-body-background-color-dark;
+
+            .widget-header {
+                color: $widget-header-font-color-dark;
+                border-top: $border-top-dark;
+                box-shadow: $widget-box-shadow-dark;
+                background-color: $widget-header-background-color-dark;
+
+                .buttons {
+
+                    .addButton {
+                        background-color: $button-bg-color-dark;
+                        color: $button-font-color-dark;
+                        border-color: $button-bg-color-dark;
+                    }
+
+                    .clearButton {
+                        background-color: $button-bg-color-dark;
+                        color: $button-font-color-dark;
+                        border-color: $button-bg-color-dark;
+
+                    }
+
+                }
+
+            }
+
+            .widget-body {
+                .grid {
+                    color: $widget-body-font-color-dark;
+
+                    .selected-row {
+                        background-color: $Task-Queue-Widget-Selected-Row-Background-Color-dark;
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Selected-Row-Hover-Background-Color-dark;
+                        }
+                    }
+
+                    .grid-row {
+                        border-bottom: 1px solid $widget-border-color-dark;
+
+                        &.expanded-row {
+                            background-color: $Task-Queue-Widget-Row-Background-Color-dark;
+                        }
+
+                        &:hover {
+                            background-color: $Task-Queue-Widget-Row-Hover-Background-Color-dark;
+                        }
+
+                        .grid-cell {
+
+                            .status-dropdown {
+                                color: $widget-body-font-color-dark;
+                            }
+
+                            .status-dropdown option {
+                                background-color: $widget-header-background-color-dark;
+                                color: $widget-header-font-color-dark;
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                .accordion-content {
+
+                    .accordion-item {
+
+                        .headerContent {
+
+                            .buttons {
+
+                                .addCommentButton {
+                                    color: $button-font-color-dark;
+                                    border-color: $button-bg-color-dark;
+                                    background-color: $button-bg-color-dark;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
     .taskQueueWgt {
         box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-        background-color: white;
         display: flex;
         flex-direction: column;
         margin: 10px;
         width: 99%;
         height: 300px;
         overflow-y: scroll;
-    
+
         &::-webkit-scrollbar {
             width: 0;
         }
-    
+
         .widget-header {
-            color: black;
             padding: 10px;
             font-size: x-small;
             font-weight: 500;
-            border-bottom: 1px solid rgba(1, 1, 1, 0.2);
-            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
             height: 10px;
             position: sticky;
             top: 0;
-            background-color: white;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
             z-index: 3;
-    
+
             .buttons {
                 display: flex;
                 flex-direction: row;
                 gap: 20px;
                 align-items: center;
-    
+
                 .icon {
                     font-size: 18px;
                     cursor: pointer;
                 }
-    
+
                 .addButton {
-    
+
                     font-size: 10px;
                     padding: 0px;
-                    color: black;
-                    border-color: black;
-    
                 }
-    
+
                 .clearButton {
-    
+
                     font-size: 10px;
                     padding: 0px 20px 0px 20px;
-                    color: black;
-                    border-color: black;
-    
+
                 }
-    
+
             }
-    
+
         }
-    
+
         .widget-body {
             .grid {
                 border-collapse: collapse;
                 font-size: 12px;
-                //height: 169px;
                 table-layout: fixed;
                 width: 100%;
-    
-                .selected-row {
-                    background-color: rgba(0, 0, 0, 0.203);
-    
-                    &:hover {
-                        background-color: rgba(0, 0, 0, 0.203) !important;
+            }
+
+            .commentsIcon {
+                font-size: 18px;
+            }
+
+            .grid-row {
+                display: table-row;
+                cursor: pointer;
+
+                .ToDo {
+                    background-color: #E5524B;
+                    min-width: 5px;
+                    min-height: 12px;
+                }
+
+                .InProgress {
+                    background-color: #DBEF5A;
+                    min-width: 5px;
+                    min-height: 12px;
+                }
+
+                .Completed {
+                    background-color: #9ADF5A;
+                    min-width: 5px;
+                    min-height: 12px;
+                }
+
+                &:hover {
+
+                    .editIcon {
+                        visibility: visible !important;
                     }
-                }            
-    
-                .commentsIcon {
-                    font-size: 18px;
+
                 }
-    
-                .header-row {
-                    font-weight: bold;
-                    display: table-row;
-                }
-    
-                .header-cell {
-                    //padding: 10px;
-                    text-align: center;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    padding: 5px;
-                }
-    
-                .header-cell,
-                .grid-cell {
-                    padding: 0;
-                    //text-align: center;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    padding: 5px;
-                    border: 1px solid rgba(0, 0, 0, 0.079);
-                }
-    
-                .grid-row {
-                    display: table-row;
-                    cursor: pointer;
-                    //height: 35px;
-    
-                    &.expanded-row {
-                        background-color: rgba(128, 128, 128, 0.097);
-                    }
-    
-                    &:hover {
-                        background-color: rgba(128, 128, 128, 0.097);
-                    }
-                }
-    
-                .colorcode-cell {
-                    width: 100px;
-                }
-    
-                .status-cell {
-                    width: 100px;
-                }
-    
-                .task-cell {
-                    width: 300px;
-                }
-    
+
                 .grid-cell {
                     display: table-cell;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     padding: 5px;
-    
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    line-height: 20px;
+
                     .status-dropdown {
                         border: none;
                         font-family: Raleway;
@@ -147,60 +309,88 @@
                         cursor: pointer;
                         background-color: transparent;
                     }
-    
-                    .status-dropdown option {
-                        padding: 8px;
-                        background-color: #fff;
-                        color: #333;
-                    }
-    
+
                     .status-dropdown option:checked {
-                        background-color: #f0f0f0;
+                        background-color: #767676;
+                        color: white;
                     }
+
+                    .editIcon {
+                        font-size: 12px;
+                        margin-left: 10px;
+                        visibility: hidden;
+                    }
+
                 }
-    
-                .accordion-content {
-                    display: table-row;
-                    background-color: rgba(128, 128, 128, 0.097);
-    
-                    .accordion-item {
-                        display: table-cell;
-                        padding: 10px;
+
+            }
+
+        }
+
+        .accordion-content {
+            display: table-row;
+            background-color: rgba(128, 128, 128, 0.097);
+
+            .accordion-item {
+                display: table-cell;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+                gap: 10px;
+
+                .headerContent {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+
+                    .commentLogs {
                         display: flex;
                         flex-direction: row;
-                        //gap: 30px;
-                        align-items: center;
-                        justify-content: space-between;
-                        border-top: 1px solid black;
-                        border-bottom: 1px solid black;
-    
-                        .commentLogs {
-                            display: flex;
-                            flex-direction: row;
-                            gap: 30px;
-                        }
-    
+                        gap: 30px;
+
+                    }
+
+                    .buttons {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 20px;
+
                         .addCommentButton {
                             font-size: 10px;
                             padding: 0 10px 0 10px;
-                            color: black;
-                            border-color: black;
                             z-index: 0;
                         }
-    
+
                     }
-    
-                    // .accordion-body {
-                    //     margin-top: 5px;
-                    // }
+
                 }
+
+                .comment {
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: left;
+                    width: 100%;
+
+                    p {
+
+                        white-space: wrap;
+                        word-wrap: break-word;
+                        line-height: 20px;
+                        width: 100%;
+                        margin: 0px;
+
+                    }
+
+                }
+
             }
+
         }
-    }
-    
-    .newTaskInput {
-        color: black;
-        border-color: black;
-        font-size: 12px;
     }
 }

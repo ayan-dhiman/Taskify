@@ -1,4 +1,80 @@
+@import 'Variables';
+
 .addCommentDilogContainer{
+
+    &.light{
+
+        .addCommentDilog{
+            background-color: $main-body-background-color-light;
+            color: $widget-body-font-color-light;
+            border-top: $border-top-light;
+    
+            .dialogTitle{
+                box-shadow: $widget-header-box-shadow-light;
+            }
+    
+            .dialogBody{
+            
+                .newCommentInput{
+                    border: 1px solid $widget-body-font-color-light;
+                    background-color: $widget-body-background-color-light;
+                    color: $widget-body-font-color-light;
+                }
+    
+            }
+        
+        }
+    
+        .dialogAction{
+            background-color: $main-body-background-color-light;
+            
+            .dialogButton{
+                color: $button-font-color-light;
+                border-color: $button-bg-color-light;
+                background-color: $button-bg-color-light;
+    
+            }
+    
+        }
+
+    }
+
+    &.dark{
+
+        .addCommentDilog{
+            background-color: $main-body-background-color-dark;
+            color: $widget-body-font-color-dark;
+            border-top: $border-top-dark;
+    
+            .dialogTitle{
+                box-shadow: $widget-header-box-shadow-dark;
+            }
+    
+            .dialogBody{
+            
+                .newCommentInput{
+                    border: 1px solid $widget-body-font-color-dark;
+                    background-color: $widget-body-background-color-dark;
+                    color: $widget-body-font-color-dark;
+                }
+    
+            }
+        
+        }
+    
+        .dialogAction{
+            background-color: $main-body-background-color-dark;
+            
+            .dialogButton{
+                color: $button-font-color-dark;
+                border-color: $button-bg-color-dark;
+                background-color: $button-bg-color-dark;
+    
+            }
+    
+        }
+
+    }
 
     .addCommentDilog{
 
@@ -7,7 +83,6 @@
         .dialogTitle{
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid black;
             font-weight: 500;
         }
 
@@ -26,7 +101,6 @@
                 
                 width: auto;
                 height: 30px;
-                border: 1px solid rgba(0, 0, 0, 0.236);
                 padding: 0px 5px 0px 5px;
             }
 
@@ -34,10 +108,20 @@
     
     }
 
-    .dialogButton{
-        color: black;
-        border-color: black;
-        font-size: 12px;
+    .dialogAction{
+        
+        .dialogButton{
+            font-size: 12px;
+            padding: 0px 20px 0px 20px;
+
+        }
+
     }
+
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+
+    border-radius: 0px !important;
 
 }

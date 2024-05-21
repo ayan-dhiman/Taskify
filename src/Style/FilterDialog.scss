@@ -1,39 +1,159 @@
-.filterDilogContainer{
+@import 'Variables';
 
-    .filterDilog{
+.filterDilogContainer {
+
+    &.light {
+
+        .filterDilog {
+
+            border-top: $border-top-light;
+            background-color: $main-body-background-color-light;
+            color: $widget-body-font-color-light;
+
+            .dialogTitle {
+                box-shadow: $widget-header-box-shadow-light;
+            }
+
+            .dialogBody {
+
+                .input {
+                    border: 1px solid $widget-body-font-color-light;
+                    color: $widget-body-font-color-light;
+                }
+
+                .select {
+                    border: 1px solid $widget-body-font-color-light;
+                    color: $widget-body-font-color-light;
+                }
+            }
+
+        }
+
+        .dialogAction {
+            background-color: $main-body-background-color-light;
+
+            .dialogButton {
+                color: $button-font-color-light;
+                border-color: $button-bg-color-light;
+                background-color: $button-bg-color-light;
+
+            }
+        }
+
+    }
+
+    &.dark {
+
+        .filterDilog {
+
+            border-top: $border-top-dark;
+            background-color: $main-body-background-color-dark;
+            color: $widget-body-font-color-dark;
+
+            .dialogTitle {
+                box-shadow: $widget-header-box-shadow-dark;
+            }
+
+            .dialogBody {
+
+                .input {
+                    border: 1px solid $widget-body-font-color-dark;
+                    color: $widget-body-font-color-dark;
+                }
+
+                .select {
+                    border: 1px solid $widget-body-font-color-dark;
+                    color: $widget-body-font-color-dark;
+                }
+            }
+
+        }
+
+        .dialogAction {
+            background-color: $main-body-background-color-dark;
+
+            .dialogButton {
+                color: $button-font-color-dark;
+                border-color: $button-bg-color-dark;
+                background-color: $button-bg-color-dark;
+
+            }
+        }
+
+    }
+
+    .filterDilog {
 
         font-family: Raleway;
 
-        .dialogTitle{
+        .dialogTitle {
             padding: 8px;
             font-size: 14px;
-            border-bottom: 1px solid black;
             font-weight: 500;
         }
 
-        .dialogBody{
+        .dialogBody {
 
             padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-         
-            p{
+
+            p {
                 font-size: 12px;
             }
-        
-            .input{
-                
+
+            .input {
+                //padding: 7px;
+                padding: 0px 5px 0px 5px;
+                height: 30px;
+                background-color: transparent;
             }
 
+            .input[type="date"]::-webkit-calendar-picker-indicator {
+
+                background-color: #ffffff;
+                color: #ffffff;
+                padding: 4px;
+                border-radius: 4px;
+            }
+
+            .select {
+                //padding: 7px;
+                padding: 0px 1px 0px 1px;
+                height: 30px;
+                background-color: transparent;
+            }
+
+            .select option {
+                background-color: #fff;
+                color: #333;
+                font-size: 14px;
+
+                &:hover {
+                    background-color: grey;
+                }
+
+            }
+
+            .select option:checked {
+                background-color: #007bff;
+                color: #fff;
+
+            }
+
+
         }
-    
+
     }
 
-    .dialogButton{
-        color: black;
-        border-color: black;
-        font-size: 12px;
+    .dialogAction {
+
+        .dialogButton {
+            font-size: 12px;
+            padding: 0px 20px 0px 20px;
+
+        }
     }
 
 }

@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
+import { useSelector } from 'react-redux';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }) {
+function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment }) {
+
+    const theme = useSelector(state => state.theme.theme);
+
+    const handleEditTask = (teamId) => {
+        console.log(teamId);
+    }
+
     return (
         <Dialog
             open={open}
             onClose={handleClose}
-            className='addTaskDilogContainer'
+            className={`addTaskDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addTaskDilog' >
                 <div className='dialogTitle'>
@@ -28,15 +37,37 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask }
                         onChange={(event) => setNewTask(event.target.value)}
                     />
 
+                    <select
+                        className='select'
+                        value={newTeam}
+                        onChange={(e) => setNewTeam(e.target.value)}
+
+                    >
+                        <option value="" disabled>Select Team / Group</option>
+                        {teams.map((team) => (
+                            <option value={team.name}>
+                                {team.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <input
+                        type='text'
+                        placeholder='Add comment (Optional)'
+                        className='newTaskInput'
+                        value={newComment}
+                        onChange={(event) => setNewComment(event.target.value)}
+                    />
+
                 </div>
 
             </div>
 
-            <DialogActions>
-                <Button autoFocus onClick={handleClose} className='dialogButton' >
+            <DialogActions className='dialogAction' >
+                <Button variant="outlined" autoFocus onClick={handleClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button onClick={handleAddTask} className='dialogButton' >Add Task</Button>
+                <Button variant="outlined" onClick={handleAddTask} className='dialogButton' >Add Task</Button>
             </DialogActions>
         </Dialog>
     );
