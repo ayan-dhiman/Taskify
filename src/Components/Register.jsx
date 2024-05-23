@@ -90,7 +90,8 @@ function Register() {
             setLoading(true);
             try {
                 await addUser({ name, email, password });
-                navigate('/login');
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                //navigate('/login');
             } catch (error) {
                 handleRegisterError(error);
             } finally {

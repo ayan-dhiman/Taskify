@@ -10,6 +10,9 @@ import useAlert from '../Hooks/UseAlert';
 import { UseVerifyEmail } from '../Hooks/UseVerifyEmail';
 
 import '../Style/Register.scss';
+import { UseResetPassword } from '../Hooks/UseResetPassword';
+import { UseValidateOTP } from '../Hooks/UseValidateOTP';
+import { UseGenerateOTP } from '../Hooks/UseGenerateOTP';
 
 function ForgotPassword() {
     const theme = useSelector(state => state.theme.theme);
@@ -17,14 +20,18 @@ function ForgotPassword() {
     const [activeStep, setActiveStep] = useState(0);
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [OTP, setOTP] = useState('');
     const [verifyPassword, setVerifyPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const steps = ['Registered Email', 'New Password', 'Verify Password'];
-    
+    const steps = ['Registered Email', 'OTP', 'New Password', 'Verify Password'];
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     //const updatePassword = UseUpdateUser();
     const verifyEmail = UseVerifyEmail();
+    const generateOTP = UseGenerateOTP();
+    const validateOTP = UseValidateOTP();
+    const resetPassword = UseResetPassword();
     const alert = useAlert();
 
     const handleTheme = () => {
@@ -48,6 +55,20 @@ function ForgotPassword() {
                 }
                 break;
             case 1:
+                if (!OTP.trim()) {
+                    alert('OTP cannot be blank');
+                    return false;
+                }
+                if (OTP.trim().length < 6) {
+                    alert('OTP must be at least 6 characters long');
+                    return false;
+                }
+                if(!await validateOTP(email,OTP)){
+                    alert('OTP is not valid');
+                    return false;
+                }
+                break;
+            case 2:
                 if (!newPassword.trim()) {
                     alert('Password cannot be blank');
                     return false;
@@ -57,7 +78,7 @@ function ForgotPassword() {
                     return false;
                 }
                 break;
-            case 2:
+            case 3:
                 if (!verifyPassword.trim()) {
                     alert('Password cannot be blank');
                     return false;
@@ -81,6 +102,9 @@ function ForgotPassword() {
         dispatch({ type: 'SET_OPEN', payload: false });
 
         if (await validateInput()) {
+            if(activeStep === 0){
+                generateOTP(email);
+            }
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
     };
@@ -93,7 +117,9 @@ function ForgotPassword() {
         if (await validateInput()) {
             setLoading(true);
             try {
-                //await updatePassword({password: newPassword});
+                console.log("OTP - ",OTP);
+                await resetPassword({otp: OTP, email: email, newPassword: newPassword});
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
                 //navigate('/login');
             } catch (error) {
                 handleRegisterError(error);
@@ -131,8 +157,10 @@ function ForgotPassword() {
             case 0:
                 return <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />;
             case 1:
-                return <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />;
+                return <input type="text" value={OTP} onChange={(e) => setOTP(e.target.value)} />;
             case 2:
+                return <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />;
+            case 3:
                 return <input type="password" value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} />;
             default:
                 return null;
@@ -164,7 +192,7 @@ function ForgotPassword() {
                     </Stepper>
                     <div>
                         {activeStep === steps.length ? (
-                            <Typography>All steps completed - you're Registered</Typography>
+                            <Typography>All steps completed - you can sign in with your updated password !</Typography>
                         ) : (
                             <div className='inputContainer'>
                                 <div className='label'>Enter your {steps[activeStep]}</div>

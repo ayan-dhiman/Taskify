@@ -1,4 +1,4 @@
-const initialState = { theme: 'light' };
+const initialState = { theme: 'dark' };
 
 const themeReducer = (state = initialState, action) => {
     switch (action.type) {

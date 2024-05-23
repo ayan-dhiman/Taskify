@@ -169,6 +169,9 @@ function TaskQueue({ loading, setLoading }) {
             setLoading(false);
         }
 
+        console.log("Tasks After Adding new task - ");
+        console.log(tasks);
+
     };
 
     //-----------------------------------------------------------------------------
