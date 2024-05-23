@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@mui/material';
@@ -19,8 +19,10 @@ import FilterDialog from '../Sub-Components/FilterDialog';
 import UpdateTaskDilog from '../Sub-Components/UpdateTaskDilog';
 import UpdateTeamDilog from '../Sub-Components/UpdateTeamDilog';
 import StatusDropdownCell from '../Sub-Components/StatusDropdownCell';
+import AddTeamDialog from '../Sub-Components/AddTeamDilog';
 
 import '../../Style/TaskQueue.scss';
+import { UseAddTeam } from '../../Hooks/UseAddTeam';
 
 function TaskQueue({ loading, setLoading }) {
 
@@ -45,6 +47,7 @@ function TaskQueue({ loading, setLoading }) {
 
     const deleteTask = UseDeleteTask();
 
+    const addTeam = UseAddTeam();
 
     const [selectedRows, setSelectedRows] = useState([]);
 
@@ -115,6 +118,39 @@ function TaskQueue({ loading, setLoading }) {
     const [filterStatus, setFilterStatus] = useState('');
 
     const [filteredRows, setFilteredRows] = useState([]);
+
+    //--------------------------------------------------------------------
+
+    //Create Team States-----------------------------------------------------
+
+    const [openCreateTeamDialog, setOpenCreateTeamDialog] = useState(false);
+
+    const [newCreatedTeam, setNewCreatedTeam] = useState('');
+
+    //--------------------------------------------------------------------
+
+    //Create Team Handlers------------------------------------------------
+
+    const handleCreateTeamDialogClose = useCallback(() => {
+        setOpenCreateTeamDialog(false);
+        dispatch({ type: 'SET_OPEN', payload: false });
+    }, [dispatch]);
+
+    const handleCreateTeamDialogOpen = () => {
+        handleAddTaskDilogClose();
+        setOpenCreateTeamDialog(true);
+    };
+
+    const handleCreateTeam = async () => {
+
+        try {
+            await addTeam({ name: newCreatedTeam, userId: userId });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setOpenCreateTeamDialog(false);
+        }
+    };
 
     //--------------------------------------------------------------------
 
@@ -256,7 +292,7 @@ function TaskQueue({ loading, setLoading }) {
             alert('Team cannot be blank');
             return;
         }
-        
+
         try {
             await updateTask(taskToBeUpdated, { team: newTeam });
         } catch (error) {
@@ -478,7 +514,7 @@ function TaskQueue({ loading, setLoading }) {
                                                     <div className="headerContent">
 
                                                         <div className='commentLogs'>
-                                                            <div>Created on {row.date}</div> <div><b>Team :</b> {row.team}</div>
+                                                            <div>Created on {row.date}</div> <div><b>Team / Group :</b> {row.team}</div>
                                                         </div>
 
                                                         <div className="buttons">
@@ -517,6 +553,7 @@ function TaskQueue({ loading, setLoading }) {
                 teams={teams}
                 newComment={newComment}
                 setNewComment={setNewComment}
+                handleCreateTeamDialogOpen={handleCreateTeamDialogOpen}
             />
             <AddCommentDialog
                 openCommentDialog={openCommentDialog}
@@ -551,6 +588,13 @@ function TaskQueue({ loading, setLoading }) {
                 setNewTeam={setNewTeam}
                 taskId={taskToBeUpdated}
                 teams={teams}
+            />
+            <AddTeamDialog
+                openAddTeamDialog={openCreateTeamDialog}
+                handleAddTeamDialogClose={handleCreateTeamDialogClose}
+                handleAddTeam={handleCreateTeam}
+                newTeam={newCreatedTeam}
+                setNewTeam={setNewCreatedTeam}
             />
 
         </div>
