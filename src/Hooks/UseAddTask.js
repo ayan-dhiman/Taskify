@@ -14,7 +14,7 @@ export const UseAddTask = () => {
     const fetchActivity = UseFetchActivity();
 
     const addTask = async (newTask) => {
-
+        
         try {
             await axios.post(`${apiUrl}/tasks`, newTask, {
                 headers: {

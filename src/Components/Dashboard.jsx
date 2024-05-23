@@ -36,6 +36,8 @@ function Dashboard() {
   };
 
   const handleLogout = () => {
+    dispatch({ type: 'SET_TOKEN', payload: null });
+    dispatch({ type: 'SET_USER', payload: null });
     navigate('/login');
   };
 

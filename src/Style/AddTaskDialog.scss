@@ -1,104 +1,126 @@
 @import 'Variables';
 
-.addTaskDilogContainer{
+.addTaskDilogContainer {
 
-    &.light{
+    &.light {
 
-        .addTaskDilog{
+        .addTaskDilog {
 
             border-top: $border-top-light;
             background-color: $main-body-background-color-light;
             color: $widget-body-font-color-light;
-    
-            .dialogTitle{
+
+            .dialogTitle {
                 box-shadow: $widget-header-box-shadow-light;
             }
-    
-            .dialogBody{
-            
-                .newTaskInput{
+
+            .dialogBody {
+
+                .newTaskInput {
                     border: 1px solid $widget-body-font-color-light;
                     background-color: $widget-body-background-color-light;
                     color: $widget-body-font-color-light;
                 }
-    
-                .select{
+
+                .addTeam {
+                    color: $link-color-light;
+
+                    .createTeamBTN {
+                        color: $button-font-color-light;
+                        border-color: $button-bg-color-light;
+                        background-color: $button-bg-color-light;
+                    }
+                }
+
+                .select {
                     border: 1px solid $widget-body-font-color-light;
                     color: $widget-body-font-color-light;
                 }
-    
+
             }
-        
+
         }
-    
-        .dialogAction{
+
+        .dialogAction {
             background-color: $main-body-background-color-light;
-            
-            .dialogButton{
+
+            .dialogButton {
                 color: $button-font-color-light;
                 border-color: $button-bg-color-light;
                 background-color: $button-bg-color-light;
-    
+
             }
-    
+
         }
 
     }
 
-    &.dark{
+    &.dark {
 
-        .addTaskDilog{
+        .addTaskDilog {
 
             border-top: $border-top-dark;
             background-color: $main-body-background-color-dark;
             color: $widget-body-font-color-dark;
-    
-            .dialogTitle{
+
+            .dialogTitle {
                 box-shadow: $widget-header-box-shadow-dark;
             }
-    
-            .dialogBody{
-            
-                .newTaskInput{
+
+            .dialogBody {
+
+                .newTaskInput {
                     border: 1px solid $widget-body-font-color-dark;
                     background-color: $widget-body-background-color-dark;
                     color: $widget-body-font-color-dark;
                 }
-    
-                .select{
+
+                .addTeam {
+
+                    color: $link-color-dark;
+
+                    .createTeamBTN {
+                        color: $button-font-color-dark;
+                        border-color: $button-bg-color-dark;
+                        background-color: $button-bg-color-dark;
+                    }
+
+                }
+
+                .select {
                     border: 1px solid $widget-body-font-color-dark;
                     color: $widget-body-font-color-dark;
                 }
-    
+
             }
-        
+
         }
-    
-        .dialogAction{
+
+        .dialogAction {
             background-color: $main-body-background-color-dark;
-            
-            .dialogButton{
+
+            .dialogButton {
                 color: $button-font-color-dark;
                 border-color: $button-bg-color-dark;
                 background-color: $button-bg-color-dark;
-    
+
             }
-    
+
         }
 
     }
 
-    .addTaskDilog{
+    .addTaskDilog {
 
         font-family: Raleway;
 
-        .dialogTitle{
+        .dialogTitle {
             padding: 8px;
             font-size: 14px;
             font-weight: 500;
         }
 
-        .dialogBody{
+        .dialogBody {
 
             padding: 8px;
             display: flex;
@@ -107,18 +129,38 @@
             flex-direction: column;
             gap: 20px;
 
-         
-            p{
+
+            p {
                 font-size: 12px;
             }
-        
-            .newTaskInput{
+
+            .newTaskInput {
                 width: auto;
                 height: 30px;
                 padding: 0px 5px 0px 5px;
             }
 
-            .select{
+            .addTeam {
+                font-size: 12px;
+                margin-bottom: -10px;
+                text-align: right;
+
+                .createTeamBTN {
+
+                    font-size: 12px;
+                    padding: 0px 20px 0px 20px;
+
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+
+
+            }
+
+            .select {
                 padding: 0px 1px 0px 1px;
                 height: 30px;
                 background-color: transparent;
@@ -129,12 +171,12 @@
                 color: #333;
                 font-size: 14px;
 
-                &:hover{
+                &:hover {
                     background-color: grey;
                 }
 
             }
-            
+
             .select option:checked {
                 background-color: #007bff;
                 color: #fff;
@@ -142,12 +184,12 @@
             }
 
         }
-    
+
     }
 
-    .dialogAction{
-        
-        .dialogButton{
+    .dialogAction {
+
+        .dialogButton {
             font-size: 12px;
             padding: 0px 20px 0px 20px;
 

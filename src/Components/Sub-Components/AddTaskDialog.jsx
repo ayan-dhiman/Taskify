@@ -4,7 +4,7 @@ import '../../Style/AddTaskDialog.scss';
 import { useSelector } from 'react-redux';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment }) {
+function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment, handleCreateTeamDialogOpen }) {
 
     const theme = useSelector(state => state.theme.theme);
 
@@ -36,6 +36,12 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, 
                         value={newTask}
                         onChange={(event) => setNewTask(event.target.value)}
                     />
+
+                    <div className="addTeam">
+
+                        <Button variant='Contained' className='createTeamBTN' onClick={handleCreateTeamDialogOpen}>Create Team / Group</Button>
+
+                    </div>
 
                     <select
                         className='select'
