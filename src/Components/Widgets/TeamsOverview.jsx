@@ -1,41 +1,55 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button } from '@mui/material';
+import { Badge, Button, Tooltip } from '@mui/material';
 import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 
 import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
 import { UseAddTeam } from '../../Hooks/UseAddTeam';
 import ProgressBar from '../Sub-Components/ProgressBar';
 import AddTeamDialog from '../Sub-Components/AddTeamDilog';
+import DeleteTeamDialog from '../Sub-Components/DeleteTeamDialog';
 
 import '../../Style/TeamsOverview.scss';
+import { UseDeleteTeam } from '../../Hooks/UseDeleteTeam';
 
 const TeamsOverview = () => {
 
   const userId = useSelector(state => state.auth.loggedUser.id);
   const tasks = useSelector(state => state.tasks.tasks);
   const theme = useSelector(state => state.theme.theme);
+  const teams = useSelector(state => state.tasks.teams);
 
   const dispatch = useDispatch();
 
   const [tasksByTeam, setTasksByTeam] = useState([]);
 
-  const [openAddTeamDialog, setOpenAddTeamDialog] = useState(false);
+  const alert = (message) => {
+    dispatch({ type: 'SET_OPEN', payload: true });
+    dispatch({ type: 'SET_MESSAGE', payload: message });
+  };
 
-  const [newTeam, setNewTeam] = useState('');
+  //const [openAddTeamDialog, setOpenAddTeamDialog] = useState(false);
+
+  //const [newTeam, setNewTeam] = useState('');
+
+  const [openDeleteTeamDialog, setOpenDeleteTeamDialog] = useState(false);
+
+  const [selectedTeams, setSelectedTeams] = useState([]);
+
+  const [unallocatedTeams, setUnallocatedTeams] = useState([]);
 
   const fetchTasks = UseFetchTasks();
 
-  const addTeam = UseAddTeam();
+  const deleteTeam = UseDeleteTeam();
 
-  const handleAddTeamDialogClose = useCallback(() => {
-    setOpenAddTeamDialog(false);
+  const handleDeleteTeamDialogClose = useCallback(() => {
+    setOpenDeleteTeamDialog(false);
     dispatch({ type: 'SET_OPEN', payload: false });
   }, [dispatch]);
 
-  const handleAddTeamDialogOpen = () => {
-    setOpenAddTeamDialog(true);
+  const handleDeleteTeamDialogOpen = () => {
+    setOpenDeleteTeamDialog(true);
   };
 
   const handleFetchTasks = async () => {
@@ -70,7 +84,8 @@ const TeamsOverview = () => {
           team: task.team,
           tasks: [],
           statusCounts: { ToDo: 0, 'In Progress': 0, Completed: 0 },
-          percentage: 0,
+          completedPercentage: 0,
+          inProgressPercentage: 0,
         };
       }
       acc[task.team].tasks.push(task);
@@ -82,20 +97,48 @@ const TeamsOverview = () => {
       const team = teams[teamKey];
       const totalTasks = team.tasks.length;
       const completedTasks = team.statusCounts.Completed;
-      team.percentage = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      const inProgressTasks = team.statusCounts['In Progress'];
+      team.completedPercentage = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      team.inProgressPercentage = totalTasks ? Math.round((inProgressTasks / totalTasks) * 100) : 0;
     });
     setTasksByTeam(Object.values(teams));
   }, [tasks, tasksByTeam]);
 
-  const handleAddTeam = async () => {
 
-    try {
-      await addTeam({ name: newTeam, userId: userId });
-    } catch (error) {
-      handleLoginError(error);
-    } finally {
-      setOpenAddTeamDialog(false);
+  const validateDeletingTeams = () => {
+
+    const selectedTeamsByName = selectedTeams.map(selectedTeamId => {
+
+      const teamObject = teams.find(team => team.teamId === selectedTeamId);
+
+      return teamObject ? teamObject.name : null;
+
+    }).filter(teamName => teamName);
+
+    const hasTasks = selectedTeamsByName.some(teamName => tasks.some(task => task.team === teamName));
+
+    if (hasTasks) {
+      alert(`Can't delete the following teams because they are assigned to one or more tasks: ${selectedTeamsByName.join(', ')}`);
+      return false;
     }
+
+    return true;
+  };
+
+  const handleDeleteTeam = async () => {
+
+    if (validateDeletingTeams()) {
+
+      try {
+        await deleteTeam(selectedTeams);
+      } catch (error) {
+        handleLoginError(error);
+      } finally {
+        setOpenDeleteTeamDialog(false);
+      }
+
+    }
+
   };
 
   useEffect(() => {
@@ -114,7 +157,8 @@ const TeamsOverview = () => {
       <div className="widget-header">
         <span>TEAM / GROUP OVERVIEW</span>
         <div className='buttons'>
-          <Button variant="outlined" className='addButton' onClick={handleAddTeamDialogOpen}>Add</Button>
+          {/* <Button variant="outlined" className='addButton' onClick={handleAddTeamDialogOpen}>Create</Button> */}
+          <Button variant="outlined" className='addButton' onClick={handleDeleteTeamDialogOpen}>DELETE TEAMS / GROUP</Button>
           <CachedOutlinedIcon className='icon' onClick={handleFetchTasks} />
         </div>
       </div>
@@ -126,13 +170,46 @@ const TeamsOverview = () => {
                 {columns.map((column) => (
                   <td key={column.field} id={`td-${column.field}`} className="grid-cell">
                     {column.field === 'progressbar' ? (
-                      <ProgressBar progress={row.percentage} />
+                      <ProgressBar completedProgress={row.completedPercentage} inProgressProgress={row.inProgressPercentage} />
                     ) : column.field === 'overview' ? (
-                      `${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
+                      //`${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
+                      <>
+                        <span>{row.statusCounts.ToDo} ToDo</span>
+                        <span style={{ marginRight: '20px' }}></span>
+                        <span>{row.statusCounts['In Progress']} In Progress</span>
+                        <span style={{ marginRight: '20px' }}></span>
+                        <span>{row.statusCounts.Completed} Completed</span>
+                      </>
                     ) : column.field === 'percentage' ? (
-                      `${row[column.field]}%`
+                      `${row.completedPercentage}%`
                     ) : (
-                      row[column.field]
+                      <Tooltip title={row[column.field]}>
+
+                        <Badge
+
+                          badgeContent={row.statusCounts.ToDo + row.statusCounts['In Progress']}
+                          color="primary"
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+
+                          sx={{
+                            '.css-lqi6ev-MuiBadge-badge': {
+                              minWidth: "15px",
+                              height: "15px",
+                              backgroundColor: "#d21919b0",
+                              fontSize: "8px",
+                              top: "-2px",
+                              left: "1px"
+                            }
+                          }}
+
+                        >
+                          {row[column.field]}
+                        </Badge>
+
+                      </Tooltip>
                     )}
                   </td>
                 ))}
@@ -141,12 +218,20 @@ const TeamsOverview = () => {
           </tbody>
         </table>
       </div>
-      <AddTeamDialog
+      {/* <AddTeamDialog
         openAddTeamDialog={openAddTeamDialog}
         handleAddTeamDialogClose={handleAddTeamDialogClose}
         handleAddTeam={handleAddTeam}
         newTeam={newTeam}
         setNewTeam={setNewTeam}
+      /> */}
+      <DeleteTeamDialog
+        openDeleteTeamDialog={openDeleteTeamDialog}
+        handleDeleteTeamDialogClose={handleDeleteTeamDialogClose}
+        handleDeleteTeams={handleDeleteTeam}
+        selectedTeams={selectedTeams}
+        setSelectedTeams={setSelectedTeams}
+        teams={teams}
       />
     </div>
   );

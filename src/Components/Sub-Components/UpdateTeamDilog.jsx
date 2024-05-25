@@ -3,7 +3,7 @@ import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
 import { useSelector } from 'react-redux';
 
-function UpdateTeamDilog({ taskId,openUpdateTeamDialog, handleUpdateTeamDialogClose, newTeam, setNewTeam, teams, handleUpdateTeam }) {
+function UpdateTeamDilog({ taskId,openUpdateTeamDialog, handleUpdateTeamDialogClose, newTeam, setNewTeam, teams, handleUpdateTeam, handleCreateTeamDialogOpen }) {
     const theme = useSelector(state => state.theme.theme);
 
     return (
@@ -21,6 +21,12 @@ function UpdateTeamDilog({ taskId,openUpdateTeamDialog, handleUpdateTeamDialogCl
                     <p>
                         Once you have entered the updated team, click the "Update Team" button to UPDATE the task.
                     </p>
+
+                    <div className="addTeam">
+
+                        <Button variant='Contained' className='createTeamBTN' onClick={handleCreateTeamDialogOpen}>Create Team / Group</Button>
+
+                    </div>
 
                     <select
                         className='select'

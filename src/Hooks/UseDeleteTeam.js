@@ -1,43 +1,28 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { UseFetchTeams } from './UseFetchTeams';
 
-export const UseDeleteTeam = (apiUrl, userId, token) => {
+export const UseDeleteTeam = () => {
 
-    const dispatch = useDispatch();
+    const apiUrl = process.env.REACT_APP_API_URL;
 
-    const fetchTeams = UseFetchTeams(apiUrl, userId, token);
+    const token = useSelector(state => state.auth.token);
 
-    const alert = (message) => {
-        dispatch({ type: 'SET_OPEN', payload: true });
-        dispatch({ type: 'SET_MESSAGE', payload: message });
-    };
+    const fetchTeams = UseFetchTeams();
 
-    const deleteTeam = async (teamId) => {
+    const deleteTeam = async (selectedTeams) => {
 
-        // try {
-        //     await axios.delete(`${apiUrl}/teams/${teamId}`, {
-        //         headers: {
-        //             'Authorization': `Bearer ${token}`
-        //         }
-        //     });
-        //     fetchTeams();
-        // } catch (error) {
-        //     if (error.response) {
-        //         if (error.response.status === 401) {
-        //             alert('Delete - Unauthorized: Please enter a valid email and password.');
-        //         } else {
-        //             console.error('Server Error:', error.response.data);
-        //             alert('An error occurred while processing your request. Please try again later.');
-        //         }
-        //     } else if (error.request) {
-        //         console.error('Network Error:', error.request);
-        //         alert('Network Error: Please check your internet connection.');
-        //     } else {
-        //         console.error('Error:', error.message);
-        //         alert('An error occurred. Please try again later.');
-        //     }
-        // };
+        try {
+            await axios.delete(`${apiUrl}/teams`, {
+                data: selectedTeams,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            fetchTeams();
+        } catch (error) {
+            throw(error);
+        };
     };
 
     return deleteTeam;

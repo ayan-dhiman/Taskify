@@ -8,6 +8,7 @@ import ProgressBar from '../Sub-Components/ProgressBar';
 import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
 
 import '../../Style/WeakBreakdown.scss';
+import { Badge } from '@mui/material';
 
 const WeakBreakdown = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -53,11 +54,25 @@ const WeakBreakdown = () => {
     daysOfWeek.forEach(day => {
       const totalTasks = day.tasks.length;
       const completedTasks = day.statusCounts.Completed;
-      day.percentage = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      const inProgressTasks = day.statusCounts['In Progress'];
+      day.completedPercentage = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      day.inProgressPercentage = totalTasks ? Math.round((inProgressTasks/ totalTasks) * 100) : 0;
     });
 
     setTasksByWeek(daysOfWeek);
   }, [tasks]);
+
+  const StatusCounts = ({ row }) => {
+    return (
+      <div>
+        <span>{row.statusCounts.ToDo} ToDo</span>
+        <span style={{ marginRight: '20px' }}></span>
+        <span>{row.statusCounts['In Progress']} In Progress</span>
+        <span style={{ marginRight: '20px' }}></span>
+        <span>{row.statusCounts.Completed} Completed</span>
+      </div>
+    );
+  };
 
   useEffect(() => {
     groupTasksByDay();
@@ -66,7 +81,7 @@ const WeakBreakdown = () => {
   return (
     <div className={`WeakBreakdownWgt ${theme === 'light' ? 'light' : 'dark'}`}>
       <div className="wb-widget-header">
-        <span>WEAK BREAKDOWN</span>
+        <span>THIS WEAK BREAKDOWN</span>
         <div className='buttons'>
           <CachedOutlinedIcon className='icon' onClick={fetchTasks} />
         </div>
@@ -79,11 +94,42 @@ const WeakBreakdown = () => {
                 {columns.map((column) => (
                   <td key={column.field} id={`td-${column.field}`} className="wb-grid-cell">
                     {column.field === 'progressbar' ? (
-                      <ProgressBar progress={row.percentage} />
+                      <ProgressBar completedProgress={row.completedPercentage} inProgressProgress={row.inProgressPercentage} />
                     ) : column.field === 'overview' ? (
-                      `${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
+                      //`${row.statusCounts.ToDo} ToDo, ${row.statusCounts['In Progress']} In Progress, ${row.statusCounts.Completed} Completed`
+                      <>
+                        <span>{row.statusCounts.ToDo} ToDo</span>
+                        <span style={{ marginRight: '20px' }}></span>
+                        <span>{row.statusCounts['In Progress']} In Progress</span>
+                        <span style={{ marginRight: '20px' }}></span>
+                        <span>{row.statusCounts.Completed} Completed</span>
+                      </>
                     ) : column.field === 'percentage' ? (
-                      `${row[column.field]}%`
+                      `${row.completedPercentage}%`
+                    ) : column.field === 'day' ? (
+                      <Badge 
+                        
+                        badgeContent={row.statusCounts.ToDo + row.statusCounts['In Progress']} 
+                        color="primary"
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'left',
+                        }}
+
+                        sx={{
+                          '.css-lqi6ev-MuiBadge-badge': {
+                              minWidth: "15px",
+                              height: "15px",
+                              backgroundColor: "#d21919b0",
+                              fontSize: "8px",
+                              top: "-2px",
+                              left: "1px"
+                          }
+                        }}
+                        
+                        >
+                          {row[column.field]}
+                        </Badge>
                     ) : (
                       row[column.field]
                     )}

@@ -1,35 +1,35 @@
 import React from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-function AddTeamDilog({ openAddTeamDialog, handleAddTeamDialogClose, handleAddTeam, newTeam, setNewTeam }) {
+function UpdateLinkDialog({ openUpdateLinkDialog, handleUpdateLinkDialogClose, handleUpdateLink, updatedLink, setUpdatedLink }) {
 
     const theme = useSelector(state => state.theme.theme);
 
     return (
         <Dialog
-            open={openAddTeamDialog}
-            onClose={handleAddTeamDialogClose}
+            open={openUpdateLinkDialog}
+            onClose={handleUpdateLinkDialogClose}
             className={`addCommentDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addCommentDilog' >
                 <div className='dialogTitle'>
-                    CREATE NEW  TEAM/GROUP
+                    Update Link
                 </div>
 
                 <div className="dialogBody">
 
                     <p>
-                        Once you have entered the new team/group name, click the "Add Team" button to create the Team/Group and add it with other Teams/Groups.
+                        Once you have entered the link, click the "Update Link" button to update the link.
                     </p>
 
                     <input
                         type='text'
-                        placeholder='New Team/Group'
+                        placeholder='link'
                         className='newCommentInput'
-                        value={newTeam}
-                        onChange={(event) => setNewTeam(event.target.value)}
+                        value={updatedLink}
+                        onChange={(event) => setUpdatedLink(event.target.value)}
                     />
 
                 </div>
@@ -37,13 +37,13 @@ function AddTeamDilog({ openAddTeamDialog, handleAddTeamDialogClose, handleAddTe
             </div>
 
             <DialogActions className='dialogAction'>
-                <Button variant="outlined" autoFocus onClick={handleAddTeamDialogClose} className='dialogButton' >
+                <Button variant="outlined" autoFocus onClick={handleUpdateLinkDialogClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button variant="outlined" onClick={handleAddTeam} className='dialogButton' >Add Team/Group</Button>
+                <Button variant="outlined" onClick={handleUpdateLink} className='dialogButton' >Update Link</Button>
             </DialogActions>
         </Dialog>
     );
 }
 
-export default AddTeamDilog;
+export default UpdateLinkDialog;

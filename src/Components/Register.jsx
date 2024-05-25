@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,12 +20,14 @@ function Register() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const steps = ['Name', 'Email', 'Password'];
+    const [capsLockOn, setCapsLockOn] = useState(false);
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const addUser = UseAddUser();
     const verifyEmail = UseVerifyEmail();
     const alert = useAlert();
+    const passwordRef = useRef(null);
 
     const handleTheme = () => {
         dispatch({ type: 'SET_THEME' });
@@ -85,6 +87,14 @@ function Register() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    const handleCapsLockToggle = (event) => {
+        if (event.getModifierState('CapsLock')) {
+            setCapsLockOn(true);
+        } else {
+            setCapsLockOn(false);
+        }
+    };
+
     const handleRegister = async () => {
         if (await validateInput()) {
             setLoading(true);
@@ -130,11 +140,42 @@ function Register() {
             case 1:
                 return <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />;
             case 2:
-                return <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />;
+                return <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} ref={passwordRef} />;
             default:
                 return null;
         }
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            activeStep === steps.length - 1 ? handleRegister() : handleNext();
+        }
+        if (event.key === 'Escape' && activeStep !== 0 ) {
+            handleBack();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [activeStep, name, email, password]);
+
+    useEffect(() => {
+        const passwordInput = passwordRef.current;
+        if (passwordInput) {
+            passwordInput.addEventListener('keydown', handleCapsLockToggle);
+            passwordInput.addEventListener('keyup', handleCapsLockToggle);
+        }
+
+        return () => {
+            if (passwordInput) {
+                passwordInput.removeEventListener('keydown', handleCapsLockToggle);
+                passwordInput.removeEventListener('keyup', handleCapsLockToggle);
+            }
+        };
+    }, [passwordRef]);
 
     return (
         <div className={`registerContainer ${theme}`}>
@@ -161,13 +202,16 @@ function Register() {
                     </Stepper>
                     <div>
                         {activeStep === steps.length ? (
-                            <Typography>All steps completed - you're Registered</Typography>
+                            <div className='completionDiv'>
+                                Password Reset: Get Set to Boost Your Productivity Again!
+                            </div>
                         ) : (
                             <div className='inputContainer'>
                                 <div className='label'>Enter your {steps[activeStep]}</div>
                                 <div className='inputs'>
                                     {renderStepContent(activeStep)}
                                 </div>
+                                {capsLockOn ? <p className='capsInfo'>Capslock is on</p> : ''}
                                 <div className='buttons'>
                                     <Button disabled={activeStep === 0} onClick={handleBack} className='button'>Back</Button>
                                     <Button variant="contained" className='containedButton' color="primary" onClick={activeStep === steps.length - 1 ? handleRegister : handleNext}>
@@ -178,7 +222,7 @@ function Register() {
                         )}
                     </div>
                     <div className='footerNote'>
-                        Already Have an Account? <Link to="/login" className='link'>Sign In</Link>
+                        {activeStep === steps.length ? <Link to="/login" className='link'>Sign In to your Account</Link> : <>Already Have an Account? <Link to="/login" className='link'>Sign In</Link></> }
                     </div>
                 </div>
             </div>

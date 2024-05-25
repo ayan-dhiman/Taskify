@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@mui/material';
@@ -18,11 +18,11 @@ import AddCommentDialog from '../Sub-Components/AddCommentDialog';
 import FilterDialog from '../Sub-Components/FilterDialog';
 import UpdateTaskDilog from '../Sub-Components/UpdateTaskDilog';
 import UpdateTeamDilog from '../Sub-Components/UpdateTeamDilog';
-import StatusDropdownCell from '../Sub-Components/StatusDropdownCell';
 import AddTeamDialog from '../Sub-Components/AddTeamDilog';
 
 import '../../Style/TaskQueue.scss';
 import { UseAddTeam } from '../../Hooks/UseAddTeam';
+import UpdateLinkDialog from '../Sub-Components/UpdateLinkDialog';
 
 function TaskQueue({ loading, setLoading }) {
 
@@ -54,10 +54,12 @@ function TaskQueue({ loading, setLoading }) {
     const [expandedRow, setExpandedRow] = useState(null);
 
     const columns = [
+        { field: 'checkbox' },
         { field: 'colorcode' },
         { field: 'task' },
+        { field: 'priority' },
         { field: 'status' },
-        { field: 'comments' },
+        //{ field: 'comments' },
     ];
 
     const alert = (message) => {
@@ -74,6 +76,8 @@ function TaskQueue({ loading, setLoading }) {
     const [newTeam, setNewTeam] = useState('');
 
     const [newComment, setNewComment] = useState('');
+
+    const [link, setLink] = useState('');
 
     //------------------------------------------------------------------
 
@@ -96,6 +100,16 @@ function TaskQueue({ loading, setLoading }) {
     //same state for newComment of adding a task
 
     const [taskIdForComment, setTaskIdForComment] = useState(null);
+
+    //----------------------------------------------------------------------
+
+    //Update Link states------------------------------------------------
+
+    const [openUpdateLinkDialog, setOpenUpdateLinkDialog] = useState(false);
+
+    //same state for newComment of adding a task
+
+    //same state for tasktobeupdated of updating a task
 
     //----------------------------------------------------------------------
 
@@ -125,19 +139,32 @@ function TaskQueue({ loading, setLoading }) {
 
     const [openCreateTeamDialog, setOpenCreateTeamDialog] = useState(false);
 
+    const [currentDilog, setCurrentDilog] = useState("");
+
     const [newCreatedTeam, setNewCreatedTeam] = useState('');
 
     //--------------------------------------------------------------------
 
     //Create Team Handlers------------------------------------------------
 
-    const handleCreateTeamDialogClose = useCallback(() => {
+    const handleCreateTeamDialogClose = () => {
+        debugger
         setOpenCreateTeamDialog(false);
         dispatch({ type: 'SET_OPEN', payload: false });
-    }, [dispatch]);
+        currentDilog === "AddTask" ? handleOpenAddTaskDilog() : handleTeamClickOpen();
+    };
 
-    const handleCreateTeamDialogOpen = () => {
+    const handleCreateTeamDialogOpenFromAddTask = () => {
+        debugger
+        setCurrentDilog("AddTask");
         handleAddTaskDilogClose();
+        setOpenCreateTeamDialog(true);
+    };
+
+    const handleCreateTeamDialogOpenFromUpdateTeam = () => {
+        debugger
+        setCurrentDilog("UpdateTeam");
+        handleUpdateTeamDialogClose();
         setOpenCreateTeamDialog(true);
     };
 
@@ -148,7 +175,11 @@ function TaskQueue({ loading, setLoading }) {
         } catch (error) {
             handleError(error);
         } finally {
+
             setOpenCreateTeamDialog(false);
+            debugger
+            currentDilog === "AddTask" ? handleOpenAddTaskDilog() : handleTeamClickOpen();
+
         }
     };
 
@@ -191,7 +222,8 @@ function TaskQueue({ loading, setLoading }) {
             userId: userId,
             status: 'ToDo',
             team: newTeam,
-            comment: newComment
+            comment: newComment,
+            link: link
         }
 
         try {
@@ -280,6 +312,45 @@ function TaskQueue({ loading, setLoading }) {
 
     //--------------------------------------------------------------------------
 
+    //Update Link Dilog Handlers------------------------------------------------
+
+    const handleUpdateLinkDialogClose = () => {
+        setOpenUpdateLinkDialog(false);
+        dispatch({ type: 'SET_OPEN', payload: false });
+    };
+
+    const handleUpdateLink = async () => {
+
+        setLoading(true);
+        dispatch({ type: 'SET_OPEN', payload: false });
+
+        if (!link.trim()) {
+            setLoading(false);
+            alert('Link cannot be blank');
+            return;
+        }
+
+        try {
+            await updateTask(taskIdForComment, { link: link });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLink('');
+            handleUpdateLinkDialogClose();
+            fetchTasks();
+            setLoading(false);
+        }
+
+
+    };
+
+    const handleUpdateLinkClickOpen = (taskId) => {
+        setTaskIdForComment(taskId);
+        setOpenUpdateLinkDialog(true);
+    };
+
+    //--------------------------------------------------------------------------
+
     //Update Team Dilog Handlers------------------------------------------------
 
     const handleUpdateTeam = async () => {
@@ -350,6 +421,8 @@ function TaskQueue({ loading, setLoading }) {
     };
 
     const handleClearFilters = () => {
+        setFilterDate('');
+        setFilterStatus('');
         setFilteredRows([]);
     };
 
@@ -378,11 +451,11 @@ function TaskQueue({ loading, setLoading }) {
         }
     };
 
-    const toggleRowSelection = (rowIndex) => {
-        if (selectedRows.includes(rowIndex)) {
-            setSelectedRows(selectedRows.filter((row) => row !== rowIndex));
+    const toggleRowSelection = (taskId) => {
+        if (selectedRows.includes(taskId)) {
+            setSelectedRows(selectedRows.filter((id) => id !== taskId));
         } else {
-            setSelectedRows([...selectedRows, rowIndex]);
+            setSelectedRows([...selectedRows, taskId]);
         }
     };
 
@@ -395,8 +468,7 @@ function TaskQueue({ loading, setLoading }) {
     }
 
     const handleDeleteSelectedRows = async () => {
-        selectedRows.forEach(rowIndex => {
-            const taskId = tasks[rowIndex].taskId;
+        selectedRows.forEach(taskId => {
 
             HandleDeleteTask(taskId);
 
@@ -420,6 +492,22 @@ function TaskQueue({ loading, setLoading }) {
 
     };
 
+    const handlePriorityChange = async (taskId, newPriority) => {
+
+        setLoading(true);
+
+        setLoading(false);
+
+        try {
+            await updateTask(taskId, { priority: newPriority });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLoading(false);
+        }
+
+    };
+
     const currentDate = () => {
         const date = new Date();
         const year = date.getFullYear();
@@ -433,6 +521,53 @@ function TaskQueue({ loading, setLoading }) {
         fetchTeams();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const StatusDropdownCell = ({ id, value, onChange }) => {
+        const [status, setStatus] = useState(value);
+
+        const handleChange = (event) => {
+            const newStatus = event.target.value;
+            setStatus(newStatus);
+            onChange(id, newStatus);
+        };
+
+        return (
+            <select value={status} onChange={handleChange} className="status-dropdown">
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="ToDo">ToDo</option>
+            </select>
+        );
+    };
+
+    const PriorityDropdownCell = ({ id, value, onChange }) => {
+        const [priority, setPriority] = useState(value);
+
+        const handleChange = (event) => {
+            const newPriority = event.target.value;
+            setPriority(newPriority);
+            onChange(id, newPriority);
+        };
+
+        return (
+            <select value={priority} onChange={handleChange} className="status-dropdown">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        );
+    };
+
+    useEffect(() => {
+        let filtered = tasks;
+        if (filterDate) {
+            filtered = filtered.filter(task => task.date === filterDate);
+        }
+        if (filterStatus) {
+            filtered = filtered.filter(task => task.status === filterStatus);
+        }
+        setFilteredRows(filtered);
+    }, [tasks, filterDate, filterStatus]);
 
     return (
         <div className={`TQC ${theme === 'light' ? 'light' : 'dark'}`} >
@@ -448,7 +583,7 @@ function TaskQueue({ loading, setLoading }) {
                                 <Button variant="outlined" className='clearButton' onClick={handleDeleteSelectedRows}>Delete</Button>
                             </>
                         )}
-                        {filteredRows.length > 0 && (
+                        {(filterDate || filterStatus) && (
                             <Button variant="outlined" className='clearButton' onClick={handleClearFilters}>Clear Filters</Button>
                         )}
 
@@ -470,11 +605,13 @@ function TaskQueue({ loading, setLoading }) {
                                         {columns.map((column) => (
                                             <td
                                                 key={column.field}
+                                                id={`td-${column.field}`}
                                                 className={`grid-cell ${column.field !== 'status' ? 'clickable' : ''}`}
-                                                onClick={(column.field !== 'status' && column.field !== 'comments') ? () => toggleRowSelection(rowIndex) : (column.field === 'comments' ? () => toggleRow(rowIndex) : undefined)}
+                                                onClick={(column.field === 'comments' || column.field === "task" ? () => toggleRow(rowIndex) : undefined)}
                                                 style={{
-                                                    width: column.field === 'colorcode' ? '0px' : (column.field === 'status' ? '70px' : (column.field === 'comments' ? '20px' : '500px')),
+                                                    // width: column.field === 'colorcode' ? '0px' : (column.field === 'status' ? '70px' : (column.field === 'comments' ? '20px' : (column.field === 'checkbox' ? '10px' : (column.field === 'priority' ? '10px' : '500px')))),
                                                     textAlign: column.field === 'task' ? 'left' : 'center',
+                                                    textDecoration: row.status === 'Completed' ? 'line-through' : 'none'
                                                 }}
                                             >
                                                 {column.field === 'status' ? (
@@ -483,10 +620,23 @@ function TaskQueue({ loading, setLoading }) {
                                                         value={row[column.field]}
                                                         onChange={(id, newStatus) => handleStatusChange(id, newStatus)}
                                                     />
+                                                ) : column.field === 'priority' ? (
+                                                    <PriorityDropdownCell
+                                                        id={row.taskId}
+                                                        value={row[column.field]}
+                                                        onChange={(id, newStatus) => handlePriorityChange(id, newStatus)}
+                                                    />
                                                 ) : column.field === 'comments' ? (
                                                     <RateReviewOutlinedIcon className='commentsIcon' />
                                                 ) : column.field === 'colorcode' ? (
                                                     <div className={row.status === 'In Progress' ? 'InProgress' : row.status}></div>
+                                                ) : column.field === 'checkbox' ? (
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedRows.includes(row.taskId)}
+                                                        onChange={() => toggleRowSelection(row.taskId)}
+                                                        className='checkbox'
+                                                    />
                                                 ) : (
                                                     <>
                                                         {row[column.field]}
@@ -514,13 +664,14 @@ function TaskQueue({ loading, setLoading }) {
                                                     <div className="headerContent">
 
                                                         <div className='commentLogs'>
-                                                            <div>Created on {row.date}</div> <div><b>Team / Group :</b> {row.team}</div>
+                                                            <div>Created on {row.date}</div> <div><b>Team / Group :</b> {row.team}</div> <div><b>Related Link :</b> <a href={row.link} target="_blank" rel="noopener noreferrer">{row.link}</a></div>
                                                         </div>
 
                                                         <div className="buttons">
 
                                                             <Button variant="outlined" className='addCommentButton' onClick={() => handleTeamClickOpen(row.taskId)} >Update Team</Button>
                                                             <Button variant="outlined" className='addCommentButton' onClick={() => handleCommentClickOpen(row.taskId)}>Update Comment</Button>
+                                                            <Button variant="outlined" className='addCommentButton' onClick={() => handleUpdateLinkClickOpen(row.taskId)}>Update Link</Button>
 
                                                         </div>
 
@@ -553,7 +704,9 @@ function TaskQueue({ loading, setLoading }) {
                 teams={teams}
                 newComment={newComment}
                 setNewComment={setNewComment}
-                handleCreateTeamDialogOpen={handleCreateTeamDialogOpen}
+                handleCreateTeamDialogOpen={handleCreateTeamDialogOpenFromAddTask}
+                newLink={link}
+                setNewLink={setLink}
             />
             <AddCommentDialog
                 openCommentDialog={openCommentDialog}
@@ -561,6 +714,13 @@ function TaskQueue({ loading, setLoading }) {
                 handleAddComment={handleAddComment}
                 newComment={newComment}
                 setNewComment={setNewComment}
+            />
+            <UpdateLinkDialog
+                openUpdateLinkDialog={openUpdateLinkDialog}
+                handleUpdateLinkDialogClose={handleUpdateLinkDialogClose}
+                handleUpdateLink={handleUpdateLink}
+                updatedLink={link}
+                setUpdatedLink={setLink}
             />
             <FilterDialog
                 openFilterDialog={openFilterDialog}
@@ -588,6 +748,7 @@ function TaskQueue({ loading, setLoading }) {
                 setNewTeam={setNewTeam}
                 taskId={taskToBeUpdated}
                 teams={teams}
+                handleCreateTeamDialogOpen={handleCreateTeamDialogOpenFromUpdateTeam}
             />
             <AddTeamDialog
                 openAddTeamDialog={openCreateTeamDialog}
