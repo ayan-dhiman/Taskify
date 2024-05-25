@@ -1,26 +1,30 @@
 .progress-bar-container {
     width: 100%;
-    // /border: 1px solid #ccc;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    display: flex;
 
     .progress-bar {
-        width: 0%;
         min-height: 10px;
         height: auto;
-        background-color: #9ADF5A;
-        color: #fff;
         text-align: center;
         line-height: 10px;
-        animation: slideRight 1s ease; /* Apply animation */
+        position: relative;
+
+        span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+        }
     }
 
-    @keyframes slideRight {
-        0% {
-            width: 0%;
-        }
-        100% {
-            width: var(--progress-width, 0%);
-        }
+    .completed {
+        background-color: #9ADF5A;
+    }
+
+    .in-progress {
+        background-color: #DBEF5A;
     }
 }

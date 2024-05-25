@@ -62,8 +62,7 @@ function Activity({ loading, setLoading }) {
         return dateB - dateA;
       }
     });
-
-    dispatch({type: 'SET_ACTVITY', payload: sortedRows});
+    dispatch({type: 'SET_ACTIVITY', payload: sortedRows});
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 

@@ -1,7 +1,7 @@
 @import 'Variables';
 
 .TQC {
-    width: 60%;
+    width: 100vw;
 
     &.light {
 
@@ -13,6 +13,8 @@
                 border-top: $border-top-light;
                 box-shadow: $widget-box-shadow-light;
                 background-color: $widget-header-background-color-light;
+
+                word-spacing: 4px;
 
                 .buttons {
 
@@ -78,6 +80,18 @@
                     .accordion-item {
 
                         .headerContent {
+
+                            .commentLogs{
+                                a{
+                                    text-decoration: none;
+                                    color: $link-color-light;
+
+                                    &:hover{
+                                        text-decoration: underline;
+                                    }
+
+                                }
+                            }
 
                             .buttons {
 
@@ -175,6 +189,18 @@
 
                         .headerContent {
 
+                            .commentLogs{
+                                a{
+                                    text-decoration: none;
+                                    color: $link-color-dark;
+
+                                    &:hover{
+                                        text-decoration: underline;
+                                    }
+
+                                }
+                            }
+
                             .buttons {
 
                                 .addCommentButton {
@@ -200,7 +226,7 @@
         display: flex;
         flex-direction: column;
         margin: 10px;
-        width: 99%;
+        //width: 99%;
         height: 300px;
         overflow-y: scroll;
 
@@ -257,6 +283,11 @@
                 width: 100%;
             }
 
+            .checkbox{
+                margin: 10px 0px;
+            }
+            
+
             .commentsIcon {
                 font-size: 18px;
             }
@@ -267,19 +298,19 @@
 
                 .ToDo {
                     background-color: #E5524B;
-                    min-width: 5px;
+                    min-width: 2px;
                     min-height: 12px;
                 }
 
                 .InProgress {
                     background-color: #DBEF5A;
-                    min-width: 5px;
+                    min-width: 2px;
                     min-height: 12px;
                 }
 
                 .Completed {
                     background-color: #9ADF5A;
-                    min-width: 5px;
+                    min-width: 2px;
                     min-height: 12px;
                 }
 
@@ -289,6 +320,34 @@
                         visibility: visible !important;
                     }
 
+                }
+
+                #td-colorcode{
+                    //background-color: aqua;
+                    width: 5px;
+                }
+
+                #td-status{
+                    //background-color: rgb(151, 255, 125);
+                    width: 100px;
+                }
+
+                // #td-comments{
+                //     background-color: rgb(211, 181, 255);
+                // }
+
+                #td-checkbox{
+                    //background-color: rgb(255, 166, 115);
+                    width: 10px;
+                }
+
+                #td-priority{
+                    //background-color: burlywood;
+                    width: 70px;
+                }
+
+                #td-task{
+                    //background-color: rgb(255, 128, 128);
                 }
 
                 .grid-cell {

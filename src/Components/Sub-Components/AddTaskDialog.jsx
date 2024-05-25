@@ -4,7 +4,7 @@ import '../../Style/AddTaskDialog.scss';
 import { useSelector } from 'react-redux';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment, handleCreateTeamDialogOpen }) {
+function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, newTeam, setNewTeam, teams, newComment, setNewComment, handleCreateTeamDialogOpen, newLink, setNewLink }) {
 
     const theme = useSelector(state => state.theme.theme);
 
@@ -63,6 +63,14 @@ function AddTaskDialog({ open, handleClose, handleAddTask, newTask, setNewTask, 
                         className='newTaskInput'
                         value={newComment}
                         onChange={(event) => setNewComment(event.target.value)}
+                    />
+
+                    <input
+                        type='text'
+                        placeholder='Add Related Link (Optional)'
+                        className='newTaskInput'
+                        value={newLink}
+                        onChange={(event) => setNewLink(event.target.value)}
                     />
 
                 </div>

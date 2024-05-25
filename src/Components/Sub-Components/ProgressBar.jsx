@@ -1,13 +1,14 @@
 import React from 'react';
 import '../../Style/ProgressBar.scss';
 
-const ProgressBar = ({ progress }) => {
+const ProgressBar = ({ completedProgress, inProgressProgress }) => {
     return (
         <div className="progress-bar-container">
-            <div
-                className="progress-bar"
-                style={{ '--progress-width': progress, 'width':`${progress}%` }}
-            >
+            <div className="progress-bar completed" style={{ width: `${completedProgress}%` }}>
+                
+            </div>
+            <div className="progress-bar in-progress" style={{ width: `${inProgressProgress}%` }}>
+                
             </div>
         </div>
     );

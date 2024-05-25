@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,10 +12,11 @@ import '../Style/Login.scss';
 
 function Login() {
     const theme = useSelector(state => state.theme.theme);
-    
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [capsLockOn, setCapsLockOn] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -68,6 +69,42 @@ function Login() {
         dispatch({ type: 'SET_THEME' });
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSignIn();
+        }
+    };
+
+    const handleCapsLockToggle = (event) => {
+        if (event.getModifierState('CapsLock')) {
+            setCapsLockOn(true);
+        } else {
+            setCapsLockOn(false);
+        }
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    }
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [email, password]);
+
+    useEffect(() => {
+        const passwordInput = document.querySelector('input[type="password"]');
+        passwordInput.addEventListener('keydown', handleCapsLockToggle);
+        passwordInput.addEventListener('keyup', handleCapsLockToggle);
+
+        return () => {
+            passwordInput.removeEventListener('keydown', handleCapsLockToggle);
+            passwordInput.removeEventListener('keyup', handleCapsLockToggle);
+        };
+    }, []);
+
     return (
         <div className={`loginContainer ${theme}`}>
             {loading && <LinearProgress className='lProgress' sx={{
@@ -101,9 +138,11 @@ function Login() {
                     <input
                         type="password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                         className={`input ${theme}`}
                     />
+
+                    {capsLockOn ? <p className='capsInfo'>Capslock is on</p> : ''}
 
                     <Button
                         variant='outlined'

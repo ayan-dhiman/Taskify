@@ -98,7 +98,7 @@ function Dashboard() {
       <div className="dashboardBody">
         <div className="widgetRow">
           <TaskQueue loading={loading} setLoading={setLoading} />
-          <NotificationCenter />
+          {/* <NotificationCenter /> */}
         </div>
         <div className="widgetRow">
           <WeakBreakdown />
