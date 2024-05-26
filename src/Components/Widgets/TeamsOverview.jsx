@@ -9,6 +9,7 @@ import { UseAddTeam } from '../../Hooks/UseAddTeam';
 import ProgressBar from '../Sub-Components/ProgressBar';
 import AddTeamDialog from '../Sub-Components/AddTeamDilog';
 import DeleteTeamDialog from '../Sub-Components/DeleteTeamDialog';
+import ImportExportOutlinedIcon from '@mui/icons-material/ImportExportOutlined';
 
 import '../../Style/TeamsOverview.scss';
 import { UseDeleteTeam } from '../../Hooks/UseDeleteTeam';
@@ -23,6 +24,7 @@ const TeamsOverview = () => {
   const dispatch = useDispatch();
 
   const [tasksByTeam, setTasksByTeam] = useState([]);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const alert = (message) => {
     dispatch({ type: 'SET_OPEN', payload: true });
@@ -36,8 +38,6 @@ const TeamsOverview = () => {
   const [openDeleteTeamDialog, setOpenDeleteTeamDialog] = useState(false);
 
   const [selectedTeams, setSelectedTeams] = useState([]);
-
-  const [unallocatedTeams, setUnallocatedTeams] = useState([]);
 
   const fetchTasks = UseFetchTasks();
 
@@ -141,6 +141,16 @@ const TeamsOverview = () => {
 
   };
 
+  const sortTasksByPercentage = () => {
+    const sortedTasks = [...tasksByTeam].sort((a, b) => {
+      return sortOrder === 'asc'
+        ? a.completedPercentage - b.completedPercentage
+        : b.completedPercentage - a.completedPercentage;
+    });
+    setTasksByTeam(sortedTasks);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
   useEffect(() => {
     groupTasksByTeam();
   }, [tasks]);
@@ -159,6 +169,7 @@ const TeamsOverview = () => {
         <div className='buttons'>
           {/* <Button variant="outlined" className='addButton' onClick={handleAddTeamDialogOpen}>Create</Button> */}
           <Button variant="outlined" className='addButton' onClick={handleDeleteTeamDialogOpen}>DELETE TEAMS / GROUP</Button>
+          <ImportExportOutlinedIcon className='icon' onClick={sortTasksByPercentage} />
           <CachedOutlinedIcon className='icon' onClick={handleFetchTasks} />
         </div>
       </div>
@@ -188,14 +199,14 @@ const TeamsOverview = () => {
                         <Badge
 
                           badgeContent={row.statusCounts.ToDo + row.statusCounts['In Progress']}
-                          color="primary"
+                          color="error"
                           anchorOrigin={{
                             vertical: 'top',
                             horizontal: 'left',
                           }}
 
                           sx={{
-                            '.css-lqi6ev-MuiBadge-badge': {
+                            '.css-wurjig-MuiBadge-badge': {
                               minWidth: "15px",
                               height: "15px",
                               backgroundColor: "#d21919b0",

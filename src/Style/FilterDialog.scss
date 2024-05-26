@@ -16,13 +16,21 @@
 
             .dialogBody {
 
+                .date{
+
+                    .select{
+                        border: 1px solid black;
+                    }
+
+                }
+
                 .input {
                     border: 1px solid $widget-body-font-color-light;
                     color: $widget-body-font-color-light;
                 }
 
                 .select {
-                    border: 1px solid $widget-body-font-color-light;
+                    //border: 1px solid $widget-body-font-color-light;
                     color: $widget-body-font-color-light;
                 }
             }
@@ -103,45 +111,60 @@
                 font-size: 12px;
             }
 
-            .input {
-                //padding: 7px;
-                padding: 0px 5px 0px 5px;
-                height: 30px;
-                background-color: transparent;
-            }
+            .date{
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
 
-            .input[type="date"]::-webkit-calendar-picker-indicator {
+                .select {
+                    //padding: 7px;
+                    padding: 0px 1px 0px 1px;
+                    height: 30px;
+                    background-color: transparent;
+                    width: 20%;
+                }
+    
+                .select option {
+                    background-color: #fff;
+                    color: #333;
+                    font-size: 14px;
+    
+                    &:hover {
+                        background-color: grey;
+                    }
+    
+                }
+    
+                .select option:checked {
+                    background-color: #007bff;
+                    color: #fff;
+    
+                }
 
-                background-color: #ffffff;
-                color: #ffffff;
-                padding: 4px;
-                border-radius: 4px;
-            }
-
-            .select {
-                //padding: 7px;
-                padding: 0px 1px 0px 1px;
-                height: 30px;
-                background-color: transparent;
-            }
-
-            .select option {
-                background-color: #fff;
-                color: #333;
-                font-size: 14px;
-
-                &:hover {
-                    background-color: grey;
+                .input {
+                    //padding: 7px;
+                    padding: 0px 5px 0px 5px;
+                    height: 29px;
+                    background-color: transparent;
+                    width: 80%;
+                }
+    
+                .input[type="date"]::-webkit-calendar-picker-indicator {
+    
+                    background-color: #ffffff;
+                    color: #ffffff;
+                    padding: 4px;
+                    border-radius: 4px;
+                    cursor: pointer;
                 }
 
             }
 
-            .select option:checked {
-                background-color: #007bff;
-                color: #fff;
-
+            .select {
+                padding: 0px 1px 0px 1px;
+                height: 30px;
+                background-color: transparent;
             }
-
 
         }
 

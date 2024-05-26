@@ -730,6 +730,7 @@ function TaskQueue({ loading, setLoading }) {
                 setFilterDate={setFilterDate}
                 filterStatus={filterStatus}
                 setFilterStatus={setFilterStatus}
+                teams={teams}
             />
             <UpdateTaskDilog
                 openUpdateDialog={openUpdateDialog}

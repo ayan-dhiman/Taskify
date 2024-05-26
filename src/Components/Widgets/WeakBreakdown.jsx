@@ -110,14 +110,14 @@ const WeakBreakdown = () => {
                       <Badge 
                         
                         badgeContent={row.statusCounts.ToDo + row.statusCounts['In Progress']} 
-                        color="primary"
+                        color="error"
                         anchorOrigin={{
                           vertical: 'top',
                           horizontal: 'left',
                         }}
 
                         sx={{
-                          '.css-lqi6ev-MuiBadge-badge': {
+                          '.css-wurjig-MuiBadge-badge': {
                               minWidth: "15px",
                               height: "15px",
                               backgroundColor: "#d21919b0",

@@ -1,0 +1,89 @@
+@import 'Variables';
+
+.sacontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    gap: 30px;
+
+    .logindiv {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 30px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+        .link {
+            text-decoration: none;
+            color: #4493f8;
+            font-size: 16px;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .headerContainer {
+            width: 100%;
+            text-align: center;
+        }
+
+        .loginBox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 300px;
+            margin-top: 10px;
+
+            .prompt{
+                text-align: center;
+                line-height: 30px;
+            }
+            
+        }
+
+        .footerNote {
+            font-size: 14px;
+            text-align: center;
+        }
+
+        &.light {
+            background-color: $widget-body-background-color-light;
+            border-top: $border-top-light;
+
+            .headerContainer {
+                background-color: $widget-header-background-color-light;
+                box-shadow: $widget-header-box-shadow-light;
+            }
+        }
+
+        &.dark {
+            background-color: $widget-body-background-color-dark;
+            border-top: $border-top-dark;
+
+            .headerContainer {
+                background-color: $widget-header-background-color-dark;
+                box-shadow: $widget-header-box-shadow-dark;
+            }
+            
+        }
+    }
+
+    &.light {
+        color: $main-body-font-color-light;
+        background-color: $main-body-background-color-light;
+    }
+
+    &.dark {
+        color: $main-body-font-color-dark;
+        background-color: $main-body-background-color-dark;
+    }
+
+}
