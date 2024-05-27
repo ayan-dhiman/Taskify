@@ -1,0 +1,146 @@
+@import 'Variables';
+
+.accountDilogContainer{
+
+    &.light{
+
+        .accountDilog{
+            background-color: $main-body-background-color-light;
+            color: $widget-body-font-color-light;
+            border-top: $border-top-light;
+    
+            .dialogTitle{
+                box-shadow: $widget-header-box-shadow-light;
+            }
+    
+            .dialogBody{
+                
+                .input{
+                    color: black;
+                    border-color: rgba(0, 0, 0, 0.067);
+                }
+    
+            }
+        
+        }
+    
+        .dialogAction{
+            background-color: $main-body-background-color-light;
+            
+            .dialogButton{
+                color: $button-font-color-light;
+                border-color: $button-bg-color-light;
+                background-color: $button-bg-color-light;
+    
+            }
+    
+        }
+
+    }
+
+    &.dark{
+
+        .accountDilog{
+            background-color: $main-body-background-color-dark;
+            color: $widget-body-font-color-dark;
+            border-top: $border-top-dark;
+    
+            .dialogTitle{
+                box-shadow: $widget-header-box-shadow-dark;
+            }
+    
+            .dialogBody{
+            
+                .input{
+                    color: white;
+                    border-color: rgba(255, 255, 255, 0.067);
+                }
+    
+            }
+        
+        }
+    
+        .dialogAction{
+            background-color: $main-body-background-color-dark;
+            
+            .dialogButton{
+                color: $button-font-color-dark;
+                border-color: $button-bg-color-dark;
+                background-color: $button-bg-color-dark;
+    
+            }
+    
+        }
+
+    }
+
+    .accountDilog{
+
+        font-family: Raleway;
+        //width: 50vw;
+        //height: 50vh;
+
+        .dialogTitle{
+            padding: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dialogBody{
+
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            //justify-content: center;
+            // /width: 10px !important;
+            //text-align: center;
+
+            p{
+                text-align: justify;
+            }
+
+            .info{
+                margin-left: 10px;
+            }
+        
+
+            .input{
+
+                background-color: transparent;
+                border-color: rgba(0, 0, 0, 0.067);
+                font-size: 16px;
+                font-weight: 400;
+                font-family: Raleway;
+                margin-left: 10px;
+
+            }
+
+            .editIcon{
+                font-size: 12px;
+                margin-left: 10px;
+                cursor: pointer;
+            }
+           
+
+        }
+    
+    }
+
+    .dialogAction{
+        
+        .dialogButton{
+            font-size: 12px;
+            padding: 0px 20px 0px 20px;
+
+        }
+
+    }
+
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+
+    border-radius: 0px !important;
+
+}

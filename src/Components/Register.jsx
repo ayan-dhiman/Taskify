@@ -203,7 +203,7 @@ function Register() {
                     <div>
                         {activeStep === steps.length ? (
                             <div className='completionDiv'>
-                                Password Reset: Get Set to Boost Your Productivity Again!
+                                Welcome to Taskify : Get Set to Boost Your Productivity!
                             </div>
                         ) : (
                             <div className='inputContainer'>

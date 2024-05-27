@@ -17,6 +17,8 @@ import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 
 import '../Style/DashboardStyle.scss';
+import Account from './Sub-Components/Account';
+import SecurityPassword from './Sub-Components/SecurityPassword';
 
 function Dashboard() {
   const loggedUser = useSelector(state => state.auth.loggedUser.name);
@@ -26,6 +28,8 @@ function Dashboard() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
   const open = Boolean(anchorEl);
+  const [openAccountDilog, setOpenAccountDilog] = useState(false);
+  const [openSecurityDilog, setOpenSecurityDilog] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -79,13 +83,19 @@ function Dashboard() {
                 <ContrastOutlinedIcon className='MenuItemIcon' />
                 {theme === 'light' ? 'Dark' : 'Light'}
               </MenuItem>
-              <MenuItem sx={menuItemStyle}>
+              <MenuItem onClick={() => {
+                setOpenAccountDilog(true);
+                handleMenuClose();
+                }} sx={menuItemStyle}>
                 <AccountBoxOutlinedIcon className='MenuItemIcon' />
                 Account
               </MenuItem>
-              <MenuItem sx={menuItemStyle}>
+              <MenuItem onClick={() => {
+                setOpenSecurityDilog(true);
+                handleMenuClose();
+                }} sx={menuItemStyle}>
                 <SettingsOutlinedIcon className='MenuItemIcon' />
-                Settings
+                Security
               </MenuItem>
               <MenuItem onClick={handleLogout} sx={{ ...menuItemStyle, '&:hover': { backgroundColor: '#ff000019' } }}>
                 <ExitToAppOutlinedIcon className='MenuItemIcon' />
@@ -106,6 +116,17 @@ function Dashboard() {
           <Activity />
         </div>
       </div>
+
+      <Account
+        openAccountDialog={openAccountDilog}
+        setOpenAccountDilog={setOpenAccountDilog}
+      />
+
+      <SecurityPassword 
+        openSecurityDialog={openSecurityDilog}
+        setOpenSecurityDilog={setOpenSecurityDilog}
+      />
+
     </div>
   );
 }

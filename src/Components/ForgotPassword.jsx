@@ -119,10 +119,8 @@ function ForgotPassword() {
         if (await validateInput()) {
             setLoading(true);
             try {
-                console.log("OTP - ", OTP);
                 await resetPassword({ otp: OTP, email: email, newPassword: newPassword });
                 setActiveStep((prevActiveStep) => prevActiveStep + 1);
-                //navigate('/login');
             } catch (error) {
                 handleRegisterError(error);
             } finally {

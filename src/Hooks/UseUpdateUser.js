@@ -20,17 +20,5 @@ export const UseUpdateUser = () => {
         }
     };
 
-    // const updateUserByEmail = async (email,updatedDetails) => {
-    //     try {
-    //         await axios.put(`${apiUrl}/users/email/${email}`, updatedDetails, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`
-    //             }
-    //         });
-    //     } catch (error) {
-    //         throw(error);
-    //     }
-    // };
-
     return updateUser;
 };
