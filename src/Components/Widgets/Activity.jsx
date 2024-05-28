@@ -3,10 +3,11 @@ import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 import '../../Style/Activity.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { Snackbar, SnackbarContent } from '@mui/material';
+import { Button, Snackbar, SnackbarContent } from '@mui/material';
 import ImportExportOutlinedIcon from '@mui/icons-material/ImportExportOutlined';
 import useAlert from '../../Hooks/UseAlert';
 import { UseFetchActivity } from '../../Hooks/UseFetchActivity';
+import { UseDeleteActivity } from '../../Hooks/UseDeleteActivity';
 
 function Activity({ loading, setLoading }) {
 
@@ -17,6 +18,8 @@ function Activity({ loading, setLoading }) {
   const activities = useSelector(state => state.activity.activity);
 
   const fetchActivity = UseFetchActivity();
+
+  const deleteActivity = UseDeleteActivity();
 
   const [sortOrder, setSortOrder] = useState('desc');
 
@@ -52,19 +55,26 @@ function Activity({ loading, setLoading }) {
   };
 
   const sortData = () => {
-    const sortedRows = [...activities].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-
-      if (sortOrder === 'asc') {
-        return dateA - dateB;
-      } else {
-        return dateB - dateA;
-      }
+    setSortOrder(prevSortOrder => {
+      const newSortOrder = prevSortOrder === 'asc' ? 'desc' : 'asc';
+      const sortedRows = [...activities].sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+  
+        if (newSortOrder === 'asc') {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+      dispatch({ type: 'SET_ACTIVITY', payload: sortedRows });
+      return newSortOrder;
     });
-    dispatch({type: 'SET_ACTIVITY', payload: sortedRows});
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
+  
+  const handleClearActivity = () => {
+    deleteActivity();
+  }
 
   useEffect(() => {
     handleFetchActivity();
@@ -75,6 +85,7 @@ function Activity({ loading, setLoading }) {
       <div className="widget-header">
         <>ACTIVITY</>
         <div className='buttons' >
+          <Button variant="outlined" className='clearButton' onClick={handleClearActivity}>Clear Activity</Button>
           <ImportExportOutlinedIcon onClick={sortData} className='icon' />
           <CachedOutlinedIcon onClick={handleFetchActivity} className='icon' />
         </div>

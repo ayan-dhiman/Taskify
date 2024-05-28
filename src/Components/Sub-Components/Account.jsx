@@ -7,6 +7,8 @@ import { UseUpdateUser } from '../../Hooks/UseUpdateUser';
 import { UseFetchUser } from '../../Hooks/UseFetchUser';
 import { UseVerifyEmail } from '../../Hooks/UseVerifyEmail';
 import useAlert from '../../Hooks/UseAlert';
+import { UseDeleteAccount } from '../../Hooks/UseDeleteAccount';
+import { useNavigate } from 'react-router-dom';
 
 function Account({ openAccountDialog, setOpenAccountDilog }) {
 
@@ -22,7 +24,13 @@ function Account({ openAccountDialog, setOpenAccountDilog }) {
 
     const verifyEmail = UseVerifyEmail();
 
+    const deleteAccount = UseDeleteAccount();
+
     const alert = useAlert();
+
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const [userName, setUserName] = useState('');
 
@@ -84,7 +92,7 @@ function Account({ openAccountDialog, setOpenAccountDilog }) {
             }
         }
 
-        if (loggedUser.name === userName.trim() && loggedUser.email === userEmail.trim()){
+        if (loggedUser.name === userName.trim() && loggedUser.email === userEmail.trim()) {
             alert('No changes to save !');
             return;
         }
@@ -121,6 +129,19 @@ function Account({ openAccountDialog, setOpenAccountDilog }) {
         }
     };
 
+    const handleDeleteAccount = async () => {
+
+        try {
+            await deleteAccount();
+            dispatch({ type: 'SET_TOKEN', payload: null });
+            dispatch({ type: 'SET_USER', payload: null });
+            navigate('/login');
+        } catch (error) {
+            handleError(error);
+        }
+
+    }
+
     useEffect(() => {
         if (openAccountDialog) {
             setUserName(loggedUser.name);
@@ -137,6 +158,9 @@ function Account({ openAccountDialog, setOpenAccountDilog }) {
             <div className='accountDilog' >
                 <div className='dialogTitle'>
                     ACCOUNT DETAILS
+
+                    <Button variant="outlined" className='delAccButton' onClick={handleDeleteAccount}>Delete Account</Button>
+
                 </div>
 
                 <div className="dialogBody">

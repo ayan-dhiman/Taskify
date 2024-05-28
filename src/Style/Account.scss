@@ -1,92 +1,107 @@
 @import 'Variables';
 
-.accountDilogContainer{
+.accountDilogContainer {
 
-    &.light{
+    &.light {
 
-        .accountDilog{
+        .accountDilog {
             background-color: $main-body-background-color-light;
             color: $widget-body-font-color-light;
             border-top: $border-top-light;
-    
-            .dialogTitle{
+
+            .dialogTitle {
                 box-shadow: $widget-header-box-shadow-light;
+
             }
-    
-            .dialogBody{
-                
-                .input{
+
+            .dialogBody {
+
+                .input {
                     color: black;
                     border-color: rgba(0, 0, 0, 0.067);
                 }
-    
+
             }
-        
+
         }
-    
-        .dialogAction{
+
+        .dialogAction {
             background-color: $main-body-background-color-light;
-            
-            .dialogButton{
+
+            .dialogButton {
                 color: $button-font-color-light;
                 border-color: $button-bg-color-light;
                 background-color: $button-bg-color-light;
-    
+
             }
-    
+
         }
 
     }
 
-    &.dark{
+    &.dark {
 
-        .accountDilog{
+        .accountDilog {
             background-color: $main-body-background-color-dark;
             color: $widget-body-font-color-dark;
             border-top: $border-top-dark;
-    
-            .dialogTitle{
+
+            .dialogTitle {
                 box-shadow: $widget-header-box-shadow-dark;
+
             }
-    
-            .dialogBody{
-            
-                .input{
+
+            .dialogBody {
+
+                .input {
                     color: white;
                     border-color: rgba(255, 255, 255, 0.067);
                 }
-    
+
             }
-        
+
         }
-    
-        .dialogAction{
+
+        .dialogAction {
             background-color: $main-body-background-color-dark;
-            
-            .dialogButton{
+
+            .dialogButton {
                 color: $button-font-color-dark;
                 border-color: $button-bg-color-dark;
                 background-color: $button-bg-color-dark;
-    
+
             }
-    
+
         }
 
     }
 
-    .accountDilog{
+    .accountDilog {
 
         font-family: Raleway;
         //width: 50vw;
         //height: 50vh;
 
-        .dialogTitle{
+        .dialogTitle {
             padding: 8px;
             font-size: 14px;
             font-weight: 500;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .delAccButton {
+                font-size: 10px;
+                padding: 0px 20px 0px 20px;
+                background-color: red;
+                color: white;
+                border-color: red;
+            }
+
         }
 
-        .dialogBody{
+        .dialogBody {
 
             padding: 8px;
             display: flex;
@@ -96,16 +111,16 @@
             // /width: 10px !important;
             //text-align: center;
 
-            p{
+            p {
                 text-align: justify;
             }
 
-            .info{
+            .info {
                 margin-left: 10px;
             }
-        
 
-            .input{
+
+            .input {
 
                 background-color: transparent;
                 border-color: rgba(0, 0, 0, 0.067);
@@ -116,20 +131,20 @@
 
             }
 
-            .editIcon{
+            .editIcon {
                 font-size: 12px;
                 margin-left: 10px;
                 cursor: pointer;
             }
-           
+
 
         }
-    
+
     }
 
-    .dialogAction{
-        
-        .dialogButton{
+    .dialogAction {
+
+        .dialogButton {
             font-size: 12px;
             padding: 0px 20px 0px 20px;
 
@@ -139,7 +154,7 @@
 
 }
 
-.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
 
     border-radius: 0px !important;
 
