@@ -124,6 +124,14 @@ const WeakBreakdown = () => {
                               fontSize: "8px",
                               top: "-2px",
                               left: "1px"
+                          },
+                          '.css-1gml0a9': {
+                            minWidth: "15px",
+                            height: "15px",
+                            backgroundColor: "#d21919b0",
+                            fontSize: "8px",
+                            top: "-2px",
+                            left: "1px"
                           }
                         }}
                         
