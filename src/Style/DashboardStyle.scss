@@ -1,101 +1,101 @@
 @import 'Variables';
 
-.dashboardContainer{
+.dashboardContainer {
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
 
-    &.light{
+    &.light {
 
-        .lProgress{
+        .lProgress {
             background-color: $loading-bar-bg-color-light;
         }
-    
+
         .dashboardHeader {
             background-color: $main-header-background-color-light;
             border-top: $border-top-light;
 
-            .topBar{
-    
-                .appName{
-    
-                    p{
+            .topBar {
+
+                .appName {
+
+                    p {
                         color: $main-header-font-color-light;
                     }
-    
-                    .logo{
+
+                    .logo {
                         color: $main-header-font-color-light;
                     }
-    
+
                 }
-    
-                .loggedUser{
-    
-                    p{
+
+                .loggedUser {
+
+                    p {
                         color: $main-header-font-color-light;
                     }
-    
-                    .menuIcon{
+
+                    .menuIcon {
                         color: $main-header-font-color-light;
                     }
-    
+
                 }
-    
-            }        
-    
+
+            }
+
         }
-    
-        .dashboardBody{
+
+        .dashboardBody {
             background-color: $main-body-background-color-light;
-    
+
         }
 
     }
 
-    &.dark{
+    &.dark {
 
         .lProgress {
             background-color: $loading-bar-bg-color-dark;
         }
-    
+
         .dashboardHeader {
             background-color: $main-header-background-color-dark;
             border-top: $border-top-dark;
 
-            .topBar{
-    
-                .appName{
-    
-                    p{
+            .topBar {
+
+                .appName {
+
+                    p {
                         color: $main-header-font-color-dark;
                     }
-    
-                    .logo{
+
+                    .logo {
                         color: $main-header-font-color-dark;
                     }
-    
+
                 }
-    
-                .loggedUser{
-    
-                    p{
+
+                .loggedUser {
+
+                    p {
                         color: $main-header-font-color-dark;
                     }
-    
-                    .menuIcon{
+
+                    .menuIcon {
                         color: $main-header-font-color-dark;
                     }
-    
+
                 }
-    
-            }        
-    
+
+            }
+
         }
-    
-        .dashboardBody{
+
+        .dashboardBody {
             background-color: $main-body-background-color-dark;
-    
+
         }
 
     }
@@ -119,21 +119,22 @@
         padding: 1px 0 1px 0;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         z-index: 0;
-        .topBar{
+
+        .topBar {
             width: 90vw;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
 
-            .appName{
+            .appName {
                 display: flex;
                 flex-direction: row;
                 gap: 10px;
                 align-items: center;
                 justify-content: center;
 
-                .logo{
+                .logo {
                     z-index: 2;
                     width: 30px;
                     height: 30px;
@@ -141,42 +142,46 @@
 
             }
 
-            .loggedUser{
+            .loggedUser {
 
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
+                .menuOpener {
 
-                p{
-                    font-size: 14px;
-                }
-
-                .menuIcon{
-                    font-size: 14px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
                     cursor: pointer;
+
+                    p {
+                        font-size: 14px;
+                    }
+
+                    .menuIcon {
+                        font-size: 14px;
+                    }
+
                 }
 
-                .avatar{
+                .avatar {
                     width: 30px;
                     height: 30px;
                 }
 
             }
 
-        }        
+        }
 
     }
 
-    .dashboardBody{
+    .dashboardBody {
         display: flex;
         flex-direction: column;
         height: 100%;
         width: inherit;
         padding-top: 10px;
 
-        .widgetRow{
+        .widgetRow {
 
             display: flex;
             flex-direction: row;
@@ -188,6 +193,6 @@
 
 }
 
-.MenuItemIcon{
+.MenuItemIcon {
     font-size: 15px !important;
 }

@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { startOfWeek, addDays, format } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
+
+import { startOfWeek, addDays, format, subWeeks, addWeeks, startOfMonth, endOfMonth, isBefore, isAfter } from 'date-fns';
 
 import ProgressBar from '../Sub-Components/ProgressBar';
 import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
 
 import '../../Style/WeakBreakdown.scss';
 import { Badge } from '@mui/material';
+import NavigateBeforeOutlinedIcon from '@mui/icons-material/NavigateBeforeOutlined';
+import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 
 const WeakBreakdown = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -17,9 +20,18 @@ const WeakBreakdown = () => {
   const tasks = useSelector(state => state.tasks.tasks);
   const theme = useSelector(state => state.theme.theme);
 
+  const dispatch = useDispatch();
+
   const [tasksByWeek, setTasksByWeek] = useState([]);
 
-  const fetchTasks = UseFetchTasks(apiUrl, userId, token);
+  const [currentWeekStartDate, setCurrentWeekStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
+  const fetchTasks = UseFetchTasks();
+
+  const alert = (message) => {
+    dispatch({ type: 'SET_OPEN', payload: true });
+    dispatch({ type: 'SET_MESSAGE', payload: message });
+  };
 
   const columns = [
     { field: 'day', label: 'Day' },
@@ -30,9 +42,9 @@ const WeakBreakdown = () => {
   ];
 
   const groupTasksByDay = useCallback(() => {
-    const startOfWeekDate = startOfWeek(new Date(), { weekStartsOn: 1 });
+    //const startOfWeekDate = startOfWeek(new Date(), { weekStartsOn: 1 });
     const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
-      const date = addDays(startOfWeekDate, i);
+      const date = addDays(currentWeekStartDate, i);
       return {
         day: format(date, 'EEEE'),
         date: format(date, 'yyyy-MM-dd'),
@@ -60,7 +72,37 @@ const WeakBreakdown = () => {
     });
 
     setTasksByWeek(daysOfWeek);
-  }, [tasks]);
+  }, [tasks, currentWeekStartDate]);
+
+  const handlePreviousWeek = () => {
+    setCurrentWeekStartDate(prevDate => {
+      dispatch({ type: 'SET_OPEN', payload: false });
+      const newDate = subWeeks(prevDate, 1);
+      const monthStart = startOfMonth(new Date());
+      if (isBefore(newDate, monthStart)) {
+        alert("You cannot navigate to the previous week as it falls outside the current month.");
+        return prevDate;
+      }
+      return newDate;
+    });
+  };
+
+  const handleNextWeek = () => {
+    setCurrentWeekStartDate(prevDate => {
+      dispatch({ type: 'SET_OPEN', payload: false });
+      const newDate = addWeeks(prevDate, 1);
+      const monthEnd = endOfMonth(new Date());
+      if (isAfter(newDate, monthEnd)) {
+        alert("You cannot navigate to the next week as it falls outside the current month.");
+        return prevDate;
+      }
+      return newDate;
+    });
+  };
+
+  useEffect(() => {
+    groupTasksByDay();
+  }, [tasks, currentWeekStartDate, groupTasksByDay]);
 
   const StatusCounts = ({ row }) => {
     return (
@@ -83,7 +125,9 @@ const WeakBreakdown = () => {
       <div className="wb-widget-header">
         <span>THIS WEAK BREAKDOWN</span>
         <div className='buttons'>
-          <CachedOutlinedIcon className='icon' onClick={fetchTasks} />
+          <NavigateBeforeOutlinedIcon className='icon' onClick={handlePreviousWeek} />
+          <NavigateNextOutlinedIcon className='icon' onClick={handleNextWeek} />
+          <CachedOutlinedIcon className='icon' onClick={() => { dispatch({ type: 'SET_OPEN', payload: false }); setCurrentWeekStartDate(startOfWeek(new Date(), { weekStartsOn: 1 })); fetchTasks();}} />
         </div>
       </div>
       <div className="wb-widget-body">

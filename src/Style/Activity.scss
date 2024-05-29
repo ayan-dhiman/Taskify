@@ -17,6 +17,13 @@
             border-top: $border-top-light;
             box-shadow: $widget-box-shadow-light;
             background-color: $widget-header-background-color-light;
+
+            .clearButton{
+                background-color: $button-bg-color-light;
+                color: $button-font-color-light;
+                border-color: $button-bg-color-light;
+            }
+
         }
     
         .widget-body {
@@ -37,6 +44,13 @@
             border-top: $border-top-dark;
             box-shadow: $widget-box-shadow-dark;
             background-color: $widget-header-background-color-dark;
+
+            .clearButton{
+                background-color: $button-bg-color-dark;
+                color: $button-font-color-dark;
+                border-color: $button-bg-color-dark;
+            }
+
         }
     
         .widget-body {
@@ -77,6 +91,11 @@
             .icon {
                 font-size: 18px;
                 cursor: pointer;
+            }
+
+            .clearButton{
+                font-size: 10px;
+                padding: 0px 20px 0px 20px;
             }
 
         }

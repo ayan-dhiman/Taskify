@@ -68,14 +68,17 @@ function Dashboard() {
             <p>Taskify</p>
           </div>
           <DateComponent />
-          <div className="loggedUser">
-            <p>Hi {loggedUser}!</p>
-            <KeyboardArrowDownOutlinedIcon onClick={handleMenuOpen} className='menuIcon' />
+          <div className="loggedUser" >
+
+            <div className="menuOpener" onClick={handleMenuOpen}>
+              <p>Hi {loggedUser}!</p>
+              <KeyboardArrowDownOutlinedIcon className='menuIcon' />
+            </div>
             <Menu
               anchorEl={anchorEl}
               open={open}
               onClose={handleMenuClose}
-              sx={{ '& .MuiMenu-paper': { marginTop: '10px', padding: '0px 5px' }}}
+              sx={{ '& .MuiMenu-paper': { marginTop: '10px', padding: '0px 5px' } }}
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
@@ -86,14 +89,14 @@ function Dashboard() {
               <MenuItem onClick={() => {
                 setOpenAccountDilog(true);
                 handleMenuClose();
-                }} sx={menuItemStyle}>
+              }} sx={menuItemStyle}>
                 <AccountBoxOutlinedIcon className='MenuItemIcon' />
                 Account
               </MenuItem>
               <MenuItem onClick={() => {
                 setOpenSecurityDilog(true);
                 handleMenuClose();
-                }} sx={menuItemStyle}>
+              }} sx={menuItemStyle}>
                 <SettingsOutlinedIcon className='MenuItemIcon' />
                 Security
               </MenuItem>
@@ -122,7 +125,7 @@ function Dashboard() {
         setOpenAccountDilog={setOpenAccountDilog}
       />
 
-      <SecurityPassword 
+      <SecurityPassword
         openSecurityDialog={openSecurityDilog}
         setOpenSecurityDilog={setOpenSecurityDilog}
       />
