@@ -1,10 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { UseUpdateTask } from '../../Hooks/UseUpdateTask';
+import { UseFetchTasks } from '../../Hooks/UseFetchTasks';
 
-function UpdateTeamDilog({ taskId,openUpdateTeamDialog, handleUpdateTeamDialogClose, newTeam, setNewTeam, teams, handleUpdateTeam, handleCreateTeamDialogOpen }) {
+function UpdateTeamDilog({ taskId,openUpdateTeamDialog, teams, handleCreateTeamDialogOpen, setOpenUpdateTeamDilog }) {
     const theme = useSelector(state => state.theme.theme);
+
+    const [updatedTeam, setUpdatedTeam] = useState('');
+
+    const dispatch = useDispatch();
+
+    const updateTask = UseUpdateTask();
+
+    const handleUpdateTeamDialogClose = () => {
+        setOpenUpdateTeamDilog(false);
+    };
+
+    const handleUpdateTeam = async () => {
+
+        dispatch({ type: 'SET_OPEN', payload: false });
+
+        if (!updatedTeam.trim()) {
+            alert('Choose any team');
+            return;
+        }
+
+        try {
+            await updateTask(taskId, { team: updatedTeam });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setUpdatedTeam('');
+            handleUpdateTeamDialogClose();
+        }
+
+    };
+
+    const handleError = (error) => {
+        if (error.response) {
+            const { status } = error.response;
+            if (status === 401) {
+                alert('Unauthorized');
+            } else {
+                alert('An error occurred while processing your request. Please try again later.');
+            }
+        } else if (error.request) {
+            alert('Network Error: Please check your internet connection.');
+        } else {
+            alert('An error occurred. Please try again later.');
+        }
+    };
 
     return (
         <Dialog
@@ -30,8 +77,8 @@ function UpdateTeamDilog({ taskId,openUpdateTeamDialog, handleUpdateTeamDialogCl
 
                     <select
                         className='select'
-                        value={newTeam}
-                        onChange={(e) => setNewTeam(e.target.value)}
+                        value={updatedTeam}
+                        onChange={(e) => setUpdatedTeam(e.target.value)}
                         
                     >
                         <option value="" disabled>Select Team</option>

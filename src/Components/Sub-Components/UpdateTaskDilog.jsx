@@ -1,16 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
 import { useSelector } from 'react-redux';
+import { UseUpdateTask } from '../../Hooks/UseUpdateTask';
 
-function UpdateTaskDilog({ taskId, openUpdateDialog, handleUpdateDialogClose, handleUpdateTask, updatedTask, setUpdatedTask, taskToUpdate }) {
+function UpdateTaskDilog({ taskId, openUpdateDialog, setOpenUpdateDialog, taskContent }) {
     const theme = useSelector(state => state.theme.theme);
+
+    const updateTask = UseUpdateTask();
+
+    const [updatedTask,, setUpdatedTask] = useState('');
+
+    const handleUpdateDialogClose = () => {
+        setOpenUpdateDialog(false);
+    }
+
+    const handleUpdateTask = async (taskId) => {
+
+        try {
+            await updateTask(taskId, { task: updatedTask });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setUpdatedTask('');
+            setOpenUpdateDialog(false);
+        }
+
+    };
+
+    const handleError = (error) => {
+        if (error.response) {
+            const { status } = error.response;
+            if (status === 401) {
+                alert('Unauthorized: Please enter a valid email and password.');
+            } else {
+                alert('An error occurred while processing your request. Please try again later.');
+            }
+        } else if (error.request) {
+            alert('Network Error: Please check your internet connection.');
+        } else {
+            alert('An error occurred. Please try again later.');
+        }
+    };
 
     useEffect(() => {
         if (openUpdateDialog) {
-            setUpdatedTask(taskToUpdate);
+            setUpdatedTask(taskContent);
         }
-    }, [openUpdateDialog, taskToUpdate, setUpdatedTask]);
+    }, [openUpdateDialog, taskContent, setUpdatedTask]);
 
     return (
         <Dialog

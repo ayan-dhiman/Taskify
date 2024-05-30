@@ -1,15 +1,27 @@
 import { Button, Chip, Dialog, DialogActions, MenuItem, Select } from '@mui/material';
 import React, { useState } from 'react';
 import '../../Style/FilterDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter, filterDate, setFilterDate, filterStatus, setFilterStatus, teams, selectedStatus, setSelectedStatus, selectePriority, setSelectedPriority, setSelectedTeams, selectedTeams }) {
+function FilterDialog({ openFilterDialog, setOpenFilterDialog, teams, tasks, setFilteredRows }) {
 
     const theme = useSelector(state => state.theme.theme);
+
+    const dispatch = useDispatch();
 
     const status = ["Completed", "In Progress", "ToDo"];
 
     const priority = ["High", "Medium", "Low"];
+
+    const [filterDate, setFilterDate] = useState('');
+
+    const [filterDateCondition, setFilterDateCondition] = useState('');
+
+    const [selectedStatus, setSelectedStatus] = useState([]);
+
+    const [selectePriority, setSelectedPriority] = useState([]);
+
+    const [selectedTeams, setSelectedTeams] = useState([]);
 
     const handleStatusSelection = (event) => {
         setSelectedStatus(event.target.value);
@@ -22,6 +34,71 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
     const handleTeamsSelection = (event) => {
         setSelectedTeams(event.target.value);
     }
+
+    const resetFilters = () => {
+        setFilterDate('');
+        setFilterDateCondition('');
+        setSelectedPriority([]);
+        setSelectedStatus([]);
+        setSelectedTeams([]);
+    }
+
+    const handleFilterDialogClose = () => {
+        dispatch({ type: 'SET_OPEN', payload: false });
+        setOpenFilterDialog(false);
+    };
+
+    const handleFilter = () => {
+
+        console.log("Date",filterDate);
+        console.log("Date Condition",filterDateCondition);
+        console.log("Status",selectedStatus);
+        console.log("Priority",selectePriority);
+        console.log("Team",selectedTeams);
+
+        dispatch({ type: 'SET_OPEN', payload: false });
+
+        if (!filterDate && !filterDateCondition && !selectePriority.length && !selectedStatus.length && !selectedTeams.length) {
+            alert('Please select at least one filter criteria');
+            return;
+        }
+
+        let filteredData = tasks;
+
+        if (filterDate && filterDateCondition) {
+            const dateConditionMap = {
+                'less': (taskDate) => new Date(taskDate) < new Date(filterDate),
+                'equal': (taskDate) => new Date(taskDate).toDateString() === new Date(filterDate).toDateString(),
+                'greater': (taskDate) => new Date(taskDate) > new Date(filterDate),
+                'less_equal': (taskDate) => new Date(taskDate) <= new Date(filterDate),
+                'greater_equal': (taskDate) => new Date(taskDate) >= new Date(filterDate)
+            }
+
+            filteredData = filteredData.filter(task => dateConditionMap[filterDateCondition](task.date));
+
+        }
+
+        if(selectedStatus.length > 0){
+            filteredData = filteredData.filter(task => selectedStatus.includes(task.status));
+        }
+
+        if(selectePriority.length > 0){
+            filteredData = filteredData.filter(task => selectePriority.includes(task.priority));
+        }
+
+        if(selectedTeams.length > 0){
+            filteredData = filteredData.filter(task => selectedTeams.includes(task.team));
+        }
+
+        // const filteredData = tasks.filter(row => {
+        //     const dateMatch = filterDate ? row.date === filterDate : true;
+        //     const statusMatch = filterStatus ? row.status === filterStatus : true;
+        //     return dateMatch && statusMatch;
+        // });
+
+        setFilteredRows(filteredData);
+        handleFilterDialogClose();
+    };
 
     return (
         <Dialog open={openFilterDialog} onClose={handleFilterDialogClose} className={`filterDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}>
@@ -41,8 +118,8 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
 
                         <select
                             className='select'
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
+                            value={filterDateCondition}
+                            onChange={(e) => setFilterDateCondition(e.target.value)}
                         >
                             <option value="" disabled>Condition</option>
                             <option value="less">&lt;</option>
@@ -208,7 +285,7 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
             </div>
 
             <DialogActions className='dialogAction'>
-                <Button onClick={handleFilterDialogClose} variant='outlined' className='dialogButton'>Reset</Button>
+                <Button onClick={resetFilters} variant='outlined' className='dialogButton'>Reset</Button>
                 <Button onClick={handleFilterDialogClose} variant='outlined' className='dialogButton'>Cancel</Button>
                 <Button onClick={handleFilter} className='dialogButton' variant='outlined' >Apply</Button>
             </DialogActions>
