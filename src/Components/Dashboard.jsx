@@ -19,6 +19,7 @@ import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 import '../Style/DashboardStyle.scss';
 import Account from './Sub-Components/Account';
 import SecurityPassword from './Sub-Components/SecurityPassword';
+import AccountDelConfirmation from './Sub-Components/AccountDelConfirmation';
 
 function Dashboard() {
   const loggedUser = useSelector(state => state.auth.loggedUser.name);
@@ -30,6 +31,7 @@ function Dashboard() {
   const open = Boolean(anchorEl);
   const [openAccountDilog, setOpenAccountDilog] = useState(false);
   const [openSecurityDilog, setOpenSecurityDilog] = useState(false);
+  const [accDelConfirmOpen, setAccDelConfirmOpen] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,6 +46,13 @@ function Dashboard() {
     dispatch({ type: 'SET_USER', payload: null });
     navigate('/login');
   };
+
+  const handleDeleteAccount = () => {
+
+    setOpenAccountDilog(false);
+    setAccDelConfirmOpen(true);
+
+  }
 
   const toggleTheme = () => {
     dispatch({ type: 'SET_THEME' });
@@ -123,11 +132,17 @@ function Dashboard() {
       <Account
         openAccountDialog={openAccountDilog}
         setOpenAccountDilog={setOpenAccountDilog}
+        handleDeleteAccount={handleDeleteAccount}
       />
 
       <SecurityPassword
         openSecurityDialog={openSecurityDilog}
         setOpenSecurityDilog={setOpenSecurityDilog}
+      />
+
+      <AccountDelConfirmation
+        accDelConfirmOpen={accDelConfirmOpen}
+        setAccDelConfirmOpen={setAccDelConfirmOpen}
       />
 
     </div>

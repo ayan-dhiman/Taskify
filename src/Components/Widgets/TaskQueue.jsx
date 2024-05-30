@@ -123,13 +123,19 @@ function TaskQueue({ loading, setLoading }) {
 
     //--------------------------------------------------------------------
 
-    //Update Filter states------------------------------------------------
+    //Filter states------------------------------------------------
 
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
 
     const [filterDate, setFilterDate] = useState('');
 
     const [filterStatus, setFilterStatus] = useState('');
+
+    const [selectedStatus, setSelectedStatus] = useState([]);
+
+    const [selectePriority, setSelectedPriority] = useState([]);
+
+    const [selectedTeams, setSelectedTeams] = useState([]);
 
     const [filteredRows, setFilteredRows] = useState([]);
 
@@ -567,7 +573,7 @@ function TaskQueue({ loading, setLoading }) {
             filtered = filtered.filter(task => task.status === filterStatus);
         }
         setFilteredRows(filtered);
-    }, [tasks, filterDate, filterStatus]);
+    }, [tasks]);
 
     return (
         <div className={`TQC ${theme === 'light' ? 'light' : 'dark'}`} >
@@ -731,6 +737,12 @@ function TaskQueue({ loading, setLoading }) {
                 filterStatus={filterStatus}
                 setFilterStatus={setFilterStatus}
                 teams={teams}
+                selectedTeams={selectedTeams}
+                selectePriority={selectePriority}
+                selectedStatus={selectedStatus}
+                setSelectedPriority={setSelectedPriority}
+                setSelectedTeams={setSelectedTeams}
+                setSelectedStatus={setSelectedStatus}
             />
             <UpdateTaskDilog
                 openUpdateDialog={openUpdateDialog}

@@ -3,19 +3,13 @@ import React, { useState } from 'react';
 import '../../Style/FilterDialog.scss';
 import { useSelector } from 'react-redux';
 
-function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter, filterDate, setFilterDate, filterStatus, setFilterStatus, teams }) {
+function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter, filterDate, setFilterDate, filterStatus, setFilterStatus, teams, selectedStatus, setSelectedStatus, selectePriority, setSelectedPriority, setSelectedTeams, selectedTeams }) {
 
     const theme = useSelector(state => state.theme.theme);
 
     const status = ["Completed", "In Progress", "ToDo"];
 
     const priority = ["High", "Medium", "Low"];
-
-    const [selectedStatus, setSelectedStatus] = useState([]);
-
-    const [selectePriority, setSelectedPriority] = useState([]);
-
-    const [selectedTeams, setSelectedTeams] = useState([]);
 
     const handleStatusSelection = (event) => {
         setSelectedStatus(event.target.value);
@@ -66,30 +60,6 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         />
 
                     </div>
-
-
-
-                    {/* <select
-                        className='select'
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="" disabled>Select Status </option>
-                        <option value="Completed">Completed</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="ToDo">ToDo</option>
-                    </select>
-
-                    <select
-                        className='select'
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="" disabled>Select Priority </option>
-                        <option value="Completed">High</option>
-                        <option value="In Progress">Medium</option>
-                        <option value="ToDo">Low</option>
-                    </select> */}
 
                     <Select
                         className='select'
