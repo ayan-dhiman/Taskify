@@ -83,7 +83,15 @@ function TaskQueue({ loading, setLoading }) {
 
     const [filteredRows, setFilteredRows] = useState([]);
 
+    const [filterDate, setFilterDate] = useState('');
 
+    const [filterDateCondition, setFilterDateCondition] = useState('');
+
+    const [selectedStatus, setSelectedStatus] = useState([]);
+
+    const [selectePriority, setSelectedPriority] = useState([]);
+
+    const [selectedTeams, setSelectedTeams] = useState([]);
 
     const alert = (message) => {
         dispatch({ type: 'SET_OPEN', payload: true });
@@ -133,11 +141,9 @@ function TaskQueue({ loading, setLoading }) {
         setOpenFilterDialog(true);
     };
 
-    // const handleClearFilters = () => {
-    //     setFilterDate('');
-    //     setFilterDateStatus('');
-    //     setFilteredRows([]);
-    // };
+    const handleClearFilters = () => {
+        setFilteredRows([]);
+    };
 
     const handleError = (error) => {
         if (error.response) {
@@ -255,25 +261,60 @@ function TaskQueue({ loading, setLoading }) {
         );
     };
 
+    const handleFilter = () => {
+
+        dispatch({ type: 'SET_OPEN', payload: false });
+
+        if (!filterDate && !filterDateCondition && !selectePriority.length && !selectedStatus.length && !selectedTeams.length) {
+            alert('Please select at least one filter criteria');
+            return;
+        }
+
+        let filteredData = tasks;
+
+        if (filterDate && filterDateCondition) {
+            const dateConditionMap = {
+                'less': (taskDate) => new Date(taskDate) < new Date(filterDate),
+                'equal': (taskDate) => new Date(taskDate).toDateString() === new Date(filterDate).toDateString(),
+                'greater': (taskDate) => new Date(taskDate) > new Date(filterDate),
+                'less_equal': (taskDate) => new Date(taskDate) <= new Date(filterDate),
+                'greater_equal': (taskDate) => new Date(taskDate) >= new Date(filterDate)
+            }
+
+            filteredData = filteredData.filter(task => dateConditionMap[filterDateCondition](task.date));
+
+        }
+
+        if(selectedStatus.length > 0){
+            filteredData = filteredData.filter(task => selectedStatus.includes(task.status));
+        }
+
+        if(selectePriority.length > 0){
+            filteredData = filteredData.filter(task => selectePriority.includes(task.priority));
+        }
+
+        if(selectedTeams.length > 0){
+            filteredData = filteredData.filter(task => selectedTeams.includes(task.team));
+        }
+
+        setFilteredRows(filteredData);
+        dispatch({ type: 'SET_OPEN', payload: false });
+        setOpenFilterDialog(false);
+    };
+
+
+
     useEffect(() => {
         fetchTasks();
         fetchTeams();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // useEffect(() => {
-    //     let filtered = tasks;
-
-    //     if(filteredRows.length > 0){
-    //         filtered = filteredRows;
-    //     }
-
-    //     if(filterDate || filterDateStatus || selectePriority.length > 0 || selectedStatus.length > 0 || selectedTeams.length > 0){
-    //         handleFilter();
-    //     }
-
-    //     setFilteredRows(filtered);
-    // }, [tasks]);
+    useEffect(() => {
+        if(filteredRows.length > 0){
+            handleFilter();
+        }
+    }, [tasks]);
 
     return (
         <div className={`TQC ${theme === 'light' ? 'light' : 'dark'}`} >
@@ -290,9 +331,9 @@ function TaskQueue({ loading, setLoading }) {
                                 <Button variant="outlined" className='clearButton' onClick={handleDeleteSelectedRows}>Delete</Button>
                             </>
                         )}
-                        {/* {(filterDate || filterDateStatus) && (
+                        {(filteredRows.length > 0) && (
                             <Button variant="outlined" className='clearButton' onClick={handleClearFilters}>Clear Filters</Button>
-                        )} */}
+                        )}
 
                         <Button variant="outlined" className='addButton' onClick={handleOpenAddTaskDilog}>Add</Button>
 
@@ -443,6 +484,17 @@ function TaskQueue({ loading, setLoading }) {
                 setOpenFilterDialog={setOpenFilterDialog}
                 tasks={tasks}
                 setFilteredRows={setFilteredRows}
+                handleFilter = {handleFilter}
+                filterDate = {filterDate}
+                setFilterDate = {setFilterDate}
+                filterDateCondition = {filterDateCondition}
+                setFilterDateCondition = {setFilterDateCondition}
+                selectePriority = {selectePriority}
+                setSelectedPriority = {setSelectedPriority}
+                selectedStatus = {selectedStatus}
+                setSelectedStatus = {setSelectedStatus}
+                selectedTeams = {selectedTeams}
+                setSelectedTeams = {setSelectedTeams}
             />
         </div>
     );

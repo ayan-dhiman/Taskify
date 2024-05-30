@@ -14,6 +14,11 @@ function UpdateLinkDialog({ openUpdateLinkDialog, setOpenUpdateLinkDialog, taskI
 
     const updateTask = UseUpdateTask();
 
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
+
     const handleUpdateLinkDialogClose = () => {
         setOpenUpdateLinkDialog(false);
         dispatch({ type: 'SET_OPEN', payload: false });

@@ -20,6 +20,11 @@ function AddTaskDialog({ open, setOpenAddTaskDilog, handleCreateTeamDialogOpen, 
 
     const dispatch = useDispatch();
 
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
+
     const handleClose = () => {
         setOpenAddTaskDilog(false);
         setTask('');

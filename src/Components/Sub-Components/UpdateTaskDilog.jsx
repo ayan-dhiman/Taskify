@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UseUpdateTask } from '../../Hooks/UseUpdateTask';
 
 function UpdateTaskDilog({ taskId, openUpdateDialog, setOpenUpdateDialog, taskContent }) {
@@ -10,6 +10,13 @@ function UpdateTaskDilog({ taskId, openUpdateDialog, setOpenUpdateDialog, taskCo
     const updateTask = UseUpdateTask();
 
     const [updatedTask,, setUpdatedTask] = useState('');
+
+    const dispatch = useDispatch();
+
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
 
     const handleUpdateDialogClose = () => {
         setOpenUpdateDialog(false);

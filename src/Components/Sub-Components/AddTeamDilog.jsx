@@ -16,6 +16,11 @@ function AddTeamDilog({ openAddTeamDialog, setOpenAddTaskDilog, setOpenCreateTea
 
     const addTeam = UseAddTeam();
 
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
+
     const handleCreateTeamDialogClose = () => {
         setOpenCreateTeamDialog(false);
         dispatch({ type: 'SET_OPEN', payload: false });

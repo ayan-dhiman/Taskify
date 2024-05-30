@@ -10,6 +10,11 @@ function UpdateTeamDilog({ taskId,openUpdateTeamDialog, teams, handleCreateTeamD
 
     const [updatedTeam, setUpdatedTeam] = useState('');
 
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
+
     const dispatch = useDispatch();
 
     const updateTask = UseUpdateTask();
