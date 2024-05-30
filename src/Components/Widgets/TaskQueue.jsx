@@ -321,7 +321,7 @@ function TaskQueue({ loading, setLoading }) {
             <div className="taskQueueWgt">
                 <div className="widget-header">
                     <>TASK QUEUE</>
-                    <div>You've got {tasks.length} tasks today</div>
+                    {(filteredRows.length === 0 ) && (<div>You've got {tasks.length} tasks today</div>)}
                     <div className='buttons' >
                         {selectedRows.length > 0 && (
                             <>
@@ -393,7 +393,6 @@ function TaskQueue({ loading, setLoading }) {
                                                                 className="editIcon"
                                                                 onClick={(event) => {
                                                                     event.stopPropagation();
-                                                                    setTaskToBeUpdated(row.task);
                                                                     handleEditTask(row.taskId);
                                                                 }}
                                                             />

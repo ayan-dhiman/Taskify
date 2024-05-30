@@ -9,7 +9,7 @@ function UpdateTaskDilog({ taskId, openUpdateDialog, setOpenUpdateDialog, taskCo
 
     const updateTask = UseUpdateTask();
 
-    const [updatedTask,, setUpdatedTask] = useState('');
+    const [updatedTask, setUpdatedTask] = useState('');
 
     const dispatch = useDispatch();
 
