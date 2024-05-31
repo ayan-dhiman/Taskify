@@ -1,21 +1,17 @@
 import { Button, Chip, Dialog, DialogActions, MenuItem, Select } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../Style/FilterDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter, filterDate, setFilterDate, filterStatus, setFilterStatus, teams }) {
+function FilterDialog({ openFilterDialog, setOpenFilterDialog, teams, handleFilter, filterDate, setFilterDate, filterDateCondition, setFilterDateCondition, selectePriority, setSelectedPriority, selectedStatus, setSelectedStatus, selectedTeams, setSelectedTeams  }) {
 
     const theme = useSelector(state => state.theme.theme);
+
+    const dispatch = useDispatch();
 
     const status = ["Completed", "In Progress", "ToDo"];
 
     const priority = ["High", "Medium", "Low"];
-
-    const [selectedStatus, setSelectedStatus] = useState([]);
-
-    const [selectePriority, setSelectedPriority] = useState([]);
-
-    const [selectedTeams, setSelectedTeams] = useState([]);
 
     const handleStatusSelection = (event) => {
         setSelectedStatus(event.target.value);
@@ -28,6 +24,19 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
     const handleTeamsSelection = (event) => {
         setSelectedTeams(event.target.value);
     }
+
+    const resetFilters = () => {
+        setFilterDate('');
+        setFilterDateCondition('');
+        setSelectedPriority([]);
+        setSelectedStatus([]);
+        setSelectedTeams([]);
+    }
+
+    const handleFilterDialogClose = () => {
+        dispatch({ type: 'SET_OPEN', payload: false });
+        setOpenFilterDialog(false);
+    };
 
     return (
         <Dialog open={openFilterDialog} onClose={handleFilterDialogClose} className={`filterDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}>
@@ -47,8 +56,8 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
 
                         <select
                             className='select'
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
+                            value={filterDateCondition}
+                            onChange={(e) => setFilterDateCondition(e.target.value)}
                         >
                             <option value="" disabled>Condition</option>
                             <option value="less">&lt;</option>
@@ -66,30 +75,6 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
                         />
 
                     </div>
-
-
-
-                    {/* <select
-                        className='select'
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="" disabled>Select Status </option>
-                        <option value="Completed">Completed</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="ToDo">ToDo</option>
-                    </select>
-
-                    <select
-                        className='select'
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="" disabled>Select Priority </option>
-                        <option value="Completed">High</option>
-                        <option value="In Progress">Medium</option>
-                        <option value="ToDo">Low</option>
-                    </select> */}
 
                     <Select
                         className='select'
@@ -238,7 +223,7 @@ function FilterDialog({ openFilterDialog, handleFilterDialogClose, handleFilter,
             </div>
 
             <DialogActions className='dialogAction'>
-                <Button onClick={handleFilterDialogClose} variant='outlined' className='dialogButton'>Reset</Button>
+                <Button onClick={resetFilters} variant='outlined' className='dialogButton'>Reset</Button>
                 <Button onClick={handleFilterDialogClose} variant='outlined' className='dialogButton'>Cancel</Button>
                 <Button onClick={handleFilter} className='dialogButton' variant='outlined' >Apply</Button>
             </DialogActions>

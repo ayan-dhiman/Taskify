@@ -26,13 +26,12 @@ import UpdateLinkDialog from '../Sub-Components/UpdateLinkDialog';
 
 function TaskQueue({ loading, setLoading }) {
 
-    const userId = useSelector(state => state.auth.loggedUser.id);
-
     const theme = useSelector(state => state.theme.theme);
 
     const tasks = useSelector(state => state.tasks.tasks);
 
     const teams = useSelector(state => state.tasks.teams);
+
 
 
     const dispatch = useDispatch();
@@ -41,17 +40,11 @@ function TaskQueue({ loading, setLoading }) {
 
     const fetchTeams = UseFetchTeams();
 
-    const addTask = UseAddTask();
-
     const updateTask = UseUpdateTask();
 
     const deleteTask = UseDeleteTask();
 
-    const addTeam = UseAddTeam();
 
-    const [selectedRows, setSelectedRows] = useState([]);
-
-    const [expandedRow, setExpandedRow] = useState(null);
 
     const columns = [
         { field: 'checkbox' },
@@ -62,323 +55,81 @@ function TaskQueue({ loading, setLoading }) {
         //{ field: 'comments' },
     ];
 
-    const alert = (message) => {
-        dispatch({ type: 'SET_OPEN', payload: true });
-        dispatch({ type: 'SET_MESSAGE', payload: message });
-    };
+    const [selectedRows, setSelectedRows] = useState([]);
 
-    //add task states---------------------------------------------------
+    const [expandedRow, setExpandedRow] = useState(null);
 
     const [openAddTaskDilog, setOpenAddTaskDilog] = useState(false);
-
-    const [newTask, setNewTask] = useState('');
-
-    const [newTeam, setNewTeam] = useState('');
-
-    const [newComment, setNewComment] = useState('');
-
-    const [link, setLink] = useState('');
-
-    //------------------------------------------------------------------
-
-    //update task states------------------------------------------------
 
     const [updateTaskId, setUpdateTaskId] = useState('');
 
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-    const [updatedTask, setUpdatedTask] = useState('');
+    const [taskContent, setTaskContent] = useState('');
 
     const [taskToBeUpdated, setTaskToBeUpdated] = useState('');
 
-    //------------------------------------------------------------------
-
-    //Update Comment states------------------------------------------------
-
     const [openCommentDialog, setOpenCommentDialog] = useState(false);
-
-    //same state for newComment of adding a task
-
-    const [taskIdForComment, setTaskIdForComment] = useState(null);
-
-    //----------------------------------------------------------------------
-
-    //Update Link states------------------------------------------------
 
     const [openUpdateLinkDialog, setOpenUpdateLinkDialog] = useState(false);
 
-    //same state for newComment of adding a task
-
-    //same state for tasktobeupdated of updating a task
-
-    //----------------------------------------------------------------------
-
-    //Update Team states------------------------------------------------
-
-    //same state for newTeam of adding a task
-
-    //same state for tasktobeupdated of updating a task
-
     const [openUpdateTeamDialog, setOpenUpdateTeamDilog] = useState(false);
-
-    //--------------------------------------------------------------------
-
-    //Update Filter states------------------------------------------------
-
-    const [openFilterDialog, setOpenFilterDialog] = useState(false);
-
-    const [filterDate, setFilterDate] = useState('');
-
-    const [filterStatus, setFilterStatus] = useState('');
-
-    const [filteredRows, setFilteredRows] = useState([]);
-
-    //--------------------------------------------------------------------
-
-    //Create Team States-----------------------------------------------------
 
     const [openCreateTeamDialog, setOpenCreateTeamDialog] = useState(false);
 
     const [currentDilog, setCurrentDilog] = useState("");
 
-    const [newCreatedTeam, setNewCreatedTeam] = useState('');
+    const [openFilterDialog, setOpenFilterDialog] = useState(false);
 
-    //--------------------------------------------------------------------
+    const [filteredRows, setFilteredRows] = useState([]);
 
-    //Create Team Handlers------------------------------------------------
+    const [filterDate, setFilterDate] = useState('');
 
-    const handleCreateTeamDialogClose = () => {
-        debugger
-        setOpenCreateTeamDialog(false);
-        dispatch({ type: 'SET_OPEN', payload: false });
-        currentDilog === "AddTask" ? handleOpenAddTaskDilog() : handleTeamClickOpen();
+    const [filterDateCondition, setFilterDateCondition] = useState('');
+
+    const [selectedStatus, setSelectedStatus] = useState([]);
+
+    const [selectePriority, setSelectedPriority] = useState([]);
+
+    const [selectedTeams, setSelectedTeams] = useState([]);
+
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
     };
 
     const handleCreateTeamDialogOpenFromAddTask = () => {
-        debugger
         setCurrentDilog("AddTask");
-        handleAddTaskDilogClose();
+        setOpenAddTaskDilog(false);
         setOpenCreateTeamDialog(true);
     };
 
     const handleCreateTeamDialogOpenFromUpdateTeam = () => {
-        debugger
         setCurrentDilog("UpdateTeam");
-        handleUpdateTeamDialogClose();
+        setOpenUpdateTeamDilog(false);
         setOpenCreateTeamDialog(true);
     };
 
-    const handleCreateTeam = async () => {
-
-        try {
-            await addTeam({ name: newCreatedTeam, userId: userId });
-        } catch (error) {
-            handleError(error);
-        } finally {
-
-            setOpenCreateTeamDialog(false);
-            debugger
-            currentDilog === "AddTask" ? handleOpenAddTaskDilog() : handleTeamClickOpen();
-
-        }
-    };
-
-    //--------------------------------------------------------------------
-
-    //add Task Dilog Handlers------------------------------------------------------
-
     const handleOpenAddTaskDilog = () => {
-        setNewTask('');
-        setNewTeam('');
-        setNewComment('');
         dispatch({ type: 'SET_OPEN', payload: false });
         setOpenAddTaskDilog(true);
     };
 
-    const handleAddTaskDilogClose = () => {
-        setOpenAddTaskDilog(false);
-        dispatch({ type: 'SET_OPEN', payload: false });
-    };
-
-    const handleAddTask = async () => {
-        setLoading(true);
-        dispatch({ type: 'SET_OPEN', payload: false });
-
-        if (!newTask.trim()) {
-            setLoading(false);
-            alert('Task cannot be blank');
-            return;
-        }
-
-        if (!newTeam.trim()) {
-            setLoading(false);
-            alert('Team cannot be blank');
-            return;
-        }
-
-        const newTaskBody = {
-            task: newTask,
-            date: currentDate(),
-            userId: userId,
-            status: 'ToDo',
-            team: newTeam,
-            comment: newComment,
-            link: link
-        }
-
-        try {
-
-            await addTask(newTaskBody);;
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setNewTask('');
-            handleAddTaskDilogClose();
-            setLoading(false);
-        }
-
-        console.log("Tasks After Adding new task - ");
-        console.log(tasks);
-
-    };
-
-    //-----------------------------------------------------------------------------
-
-    //Update Task Dilog Handlers------------------------------------------------
-
     const handleEditTask = (taskId) => {
         setUpdateTaskId(taskId);
+        setTaskContent((tasks.find(task => task.taskId === taskId)).task);
         setOpenUpdateDialog(true);
     };
 
-    const handleUpdateDialogClose = () => {
-        setOpenUpdateDialog(false);
-    }
-
-    const handleUpdateTask = async (taskId) => {
-
-        setLoading(true);
-
-        try {
-            await updateTask(taskId, { task: updatedTask });
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setUpdatedTask('');
-            setLoading(false);
-            setOpenUpdateDialog(false);
-        }
-
-    };
-
-    //--------------------------------------------------------------------------
-
-    //Update Comment Dilog Handlers------------------------------------------------
-
-    const handleCommentDialogClose = () => {
-        setOpenCommentDialog(false);
-        dispatch({ type: 'SET_OPEN', payload: false });
-    };
-
-    const handleAddComment = async () => {
-
-        setLoading(true);
-        dispatch({ type: 'SET_OPEN', payload: false });
-
-        if (!newComment.trim()) {
-            setLoading(false);
-            alert('Comment cannot be blank');
-            return;
-        }
-
-        try {
-            await updateTask(taskIdForComment, { comment: newComment });
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setNewComment('');
-            handleCommentDialogClose();
-            fetchTasks();
-            setLoading(false);
-        }
-
-
-    };
-
     const handleCommentClickOpen = (taskId) => {
-        setTaskIdForComment(taskId);
+        setTaskToBeUpdated(taskId);
         setOpenCommentDialog(true);
     };
 
-    //--------------------------------------------------------------------------
-
-    //Update Link Dilog Handlers------------------------------------------------
-
-    const handleUpdateLinkDialogClose = () => {
-        setOpenUpdateLinkDialog(false);
-        dispatch({ type: 'SET_OPEN', payload: false });
-    };
-
-    const handleUpdateLink = async () => {
-
-        setLoading(true);
-        dispatch({ type: 'SET_OPEN', payload: false });
-
-        if (!link.trim()) {
-            setLoading(false);
-            alert('Link cannot be blank');
-            return;
-        }
-
-        try {
-            await updateTask(taskIdForComment, { link: link });
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setLink('');
-            handleUpdateLinkDialogClose();
-            fetchTasks();
-            setLoading(false);
-        }
-
-
-    };
-
     const handleUpdateLinkClickOpen = (taskId) => {
-        setTaskIdForComment(taskId);
+        setTaskToBeUpdated(taskId);
+        setTaskContent((tasks.find(task => task.taskId === taskId)).link);
         setOpenUpdateLinkDialog(true);
-    };
-
-    //--------------------------------------------------------------------------
-
-    //Update Team Dilog Handlers------------------------------------------------
-
-    const handleUpdateTeam = async () => {
-
-        setLoading(true);
-        dispatch({ type: 'SET_OPEN', payload: false });
-
-        if (!newTeam.trim()) {
-            setLoading(false);
-            alert('Team cannot be blank');
-            return;
-        }
-
-        try {
-            await updateTask(taskToBeUpdated, { team: newTeam });
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setNewTeam('');
-            handleUpdateTeamDialogClose();
-            fetchTasks();
-            setLoading(false);
-        }
-
-    };
-
-    const handleUpdateTeamDialogClose = () => {
-        setOpenUpdateTeamDilog(false);
     };
 
     const handleTeamClickOpen = (taskId) => {
@@ -386,47 +137,13 @@ function TaskQueue({ loading, setLoading }) {
         setOpenUpdateTeamDilog(true);
     };
 
-    //--------------------------------------------------------------------
-
-    //Filter Dilog Handlers ---------------------------------------------------
-
     const handleFilterClickOpen = () => {
-        setFilterDate('');
-        setFilterStatus('');
         setOpenFilterDialog(true);
     };
 
-    const handleFilterDialogClose = () => {
-        dispatch({ type: 'SET_OPEN', payload: false });
-        setOpenFilterDialog(false);
-    };
-
-    const handleFilter = () => {
-
-        dispatch({ type: 'SET_OPEN', payload: false });
-
-        if (!filterDate && !filterStatus) {
-            alert('Filters cannot be blank');
-            return;
-        }
-
-        const filteredData = tasks.filter(row => {
-            const dateMatch = filterDate ? row.date === filterDate : true;
-            const statusMatch = filterStatus ? row.status === filterStatus : true;
-            return dateMatch && statusMatch;
-        });
-
-        setFilteredRows(filteredData);
-        handleFilterDialogClose();
-    };
-
     const handleClearFilters = () => {
-        setFilterDate('');
-        setFilterStatus('');
         setFilteredRows([]);
     };
-
-    //-------------------------------------------------------------------------
 
     const handleError = (error) => {
         if (error.response) {
@@ -508,20 +225,6 @@ function TaskQueue({ loading, setLoading }) {
 
     };
 
-    const currentDate = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
-
-    useEffect(() => {
-        fetchTasks();
-        fetchTeams();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const StatusDropdownCell = ({ id, value, onChange }) => {
         const [status, setStatus] = useState(value);
 
@@ -558,22 +261,67 @@ function TaskQueue({ loading, setLoading }) {
         );
     };
 
+    const handleFilter = () => {
+
+        dispatch({ type: 'SET_OPEN', payload: false });
+
+        if (!filterDate && !filterDateCondition && !selectePriority.length && !selectedStatus.length && !selectedTeams.length) {
+            alert('Please select at least one filter criteria');
+            return;
+        }
+
+        let filteredData = tasks;
+
+        if (filterDate && filterDateCondition) {
+            const dateConditionMap = {
+                'less': (taskDate) => new Date(taskDate) < new Date(filterDate),
+                'equal': (taskDate) => new Date(taskDate).toDateString() === new Date(filterDate).toDateString(),
+                'greater': (taskDate) => new Date(taskDate) > new Date(filterDate),
+                'less_equal': (taskDate) => new Date(taskDate) <= new Date(filterDate),
+                'greater_equal': (taskDate) => new Date(taskDate) >= new Date(filterDate)
+            }
+
+            filteredData = filteredData.filter(task => dateConditionMap[filterDateCondition](task.date));
+
+        }
+
+        if(selectedStatus.length > 0){
+            filteredData = filteredData.filter(task => selectedStatus.includes(task.status));
+        }
+
+        if(selectePriority.length > 0){
+            filteredData = filteredData.filter(task => selectePriority.includes(task.priority));
+        }
+
+        if(selectedTeams.length > 0){
+            filteredData = filteredData.filter(task => selectedTeams.includes(task.team));
+        }
+
+        setFilteredRows(filteredData);
+        dispatch({ type: 'SET_OPEN', payload: false });
+        setOpenFilterDialog(false);
+    };
+
+
+
     useEffect(() => {
-        let filtered = tasks;
-        if (filterDate) {
-            filtered = filtered.filter(task => task.date === filterDate);
+        fetchTasks();
+        fetchTeams();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if(filteredRows.length > 0){
+            handleFilter();
         }
-        if (filterStatus) {
-            filtered = filtered.filter(task => task.status === filterStatus);
-        }
-        setFilteredRows(filtered);
-    }, [tasks, filterDate, filterStatus]);
+    }, [tasks]);
 
     return (
         <div className={`TQC ${theme === 'light' ? 'light' : 'dark'}`} >
             <div className="taskQueueWgt">
                 <div className="widget-header">
                     <>TASK QUEUE</>
+                    {(filteredRows.length === 0 ) && (<div>You've got {tasks.length} tasks today</div>)}
                     <div className='buttons' >
                         {selectedRows.length > 0 && (
                             <>
@@ -583,7 +331,7 @@ function TaskQueue({ loading, setLoading }) {
                                 <Button variant="outlined" className='clearButton' onClick={handleDeleteSelectedRows}>Delete</Button>
                             </>
                         )}
-                        {(filterDate || filterStatus) && (
+                        {(filteredRows.length > 0) && (
                             <Button variant="outlined" className='clearButton' onClick={handleClearFilters}>Clear Filters</Button>
                         )}
 
@@ -645,7 +393,6 @@ function TaskQueue({ loading, setLoading }) {
                                                                 className="editIcon"
                                                                 onClick={(event) => {
                                                                     event.stopPropagation();
-                                                                    setTaskToBeUpdated(row.task);
                                                                     handleEditTask(row.taskId);
                                                                 }}
                                                             />
@@ -695,70 +442,59 @@ function TaskQueue({ loading, setLoading }) {
             </div>
             <AddTaskDialog
                 open={openAddTaskDilog}
-                handleClose={handleAddTaskDilogClose}
-                handleAddTask={handleAddTask}
-                newTask={newTask}
-                setNewTask={setNewTask}
-                newTeam={newTeam}
-                setNewTeam={setNewTeam}
+                setOpenAddTaskDilog={setOpenAddTaskDilog}
                 teams={teams}
-                newComment={newComment}
-                setNewComment={setNewComment}
                 handleCreateTeamDialogOpen={handleCreateTeamDialogOpenFromAddTask}
-                newLink={link}
-                setNewLink={setLink}
             />
             <AddCommentDialog
                 openCommentDialog={openCommentDialog}
-                handleCommentDialogClose={handleCommentDialogClose}
-                handleAddComment={handleAddComment}
-                newComment={newComment}
-                setNewComment={setNewComment}
+                taskId={taskToBeUpdated}
+                setOpenCommentDialog={setOpenCommentDialog}
             />
             <UpdateLinkDialog
                 openUpdateLinkDialog={openUpdateLinkDialog}
-                handleUpdateLinkDialogClose={handleUpdateLinkDialogClose}
-                handleUpdateLink={handleUpdateLink}
-                updatedLink={link}
-                setUpdatedLink={setLink}
-            />
-            <FilterDialog
-                openFilterDialog={openFilterDialog}
-                handleFilterDialogClose={handleFilterDialogClose}
-                handleFilter={handleFilter}
-                filterDate={filterDate}
-                setFilterDate={setFilterDate}
-                filterStatus={filterStatus}
-                setFilterStatus={setFilterStatus}
-                teams={teams}
+                setOpenUpdateLinkDialog={setOpenUpdateLinkDialog}
+                taskIdToBeUpdated={taskToBeUpdated}
+                taskContent={taskContent}
             />
             <UpdateTaskDilog
                 openUpdateDialog={openUpdateDialog}
-                handleUpdateDialogClose={handleUpdateDialogClose}
-                handleUpdateTask={handleUpdateTask}
-                setUpdatedTask={setUpdatedTask}
-                updatedTask={updatedTask}
+                setOpenUpdateDialog={setOpenUpdateDialog}
                 taskId={updateTaskId}
-                taskToUpdate={taskToBeUpdated}
+                taskContent={taskContent}
             />
             <UpdateTeamDilog
-                handleUpdateTeam={handleUpdateTeam}
-                handleUpdateTeamDialogClose={handleUpdateTeamDialogClose}
-                newTeam={newTeam}
+                setOpenUpdateTeamDilog={setOpenUpdateTeamDilog}
                 openUpdateTeamDialog={openUpdateTeamDialog}
-                setNewTeam={setNewTeam}
                 taskId={taskToBeUpdated}
                 teams={teams}
                 handleCreateTeamDialogOpen={handleCreateTeamDialogOpenFromUpdateTeam}
             />
             <AddTeamDialog
                 openAddTeamDialog={openCreateTeamDialog}
-                handleAddTeamDialogClose={handleCreateTeamDialogClose}
-                handleAddTeam={handleCreateTeam}
-                newTeam={newCreatedTeam}
-                setNewTeam={setNewCreatedTeam}
+                currentDilog={currentDilog}
+                setOpenAddTaskDilog={setOpenAddTaskDilog}
+                setOpenCreateTeamDialog={setOpenCreateTeamDialog}
+                setOpenUpdateTeamDilog={setOpenUpdateTeamDilog}
             />
-
+            <FilterDialog
+                openFilterDialog={openFilterDialog}
+                teams={teams}
+                setOpenFilterDialog={setOpenFilterDialog}
+                tasks={tasks}
+                setFilteredRows={setFilteredRows}
+                handleFilter = {handleFilter}
+                filterDate = {filterDate}
+                setFilterDate = {setFilterDate}
+                filterDateCondition = {filterDateCondition}
+                setFilterDateCondition = {setFilterDateCondition}
+                selectePriority = {selectePriority}
+                setSelectedPriority = {setSelectedPriority}
+                selectedStatus = {selectedStatus}
+                setSelectedStatus = {setSelectedStatus}
+                selectedTeams = {selectedTeams}
+                setSelectedTeams = {setSelectedTeams}
+            />
         </div>
     );
 }

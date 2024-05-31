@@ -1,16 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { UseAddTeam } from '../../Hooks/UseAddTeam';
 
-function AddTeamDilog({ openAddTeamDialog, handleAddTeamDialogClose, handleAddTeam, newTeam, setNewTeam }) {
+function AddTeamDilog({ openAddTeamDialog, setOpenAddTaskDilog, setOpenCreateTeamDialog, currentDilog, setOpenUpdateTeamDilog }) {
 
     const theme = useSelector(state => state.theme.theme);
+
+    const userId = useSelector(state => state.auth.loggedUser.id);
+
+    const [newTeam, setNewTeam] = useState('');
+
+    const dispatch = useDispatch();
+
+    const addTeam = UseAddTeam();
+
+    const alert = (message) => {
+        dispatch({ type: 'SET_OPEN', payload: true });
+        dispatch({ type: 'SET_MESSAGE', payload: message });
+    };
+
+    const handleCreateTeamDialogClose = () => {
+        setOpenCreateTeamDialog(false);
+        dispatch({ type: 'SET_OPEN', payload: false });
+        currentDilog === "AddTask" ? setOpenAddTaskDilog(true) : setOpenUpdateTeamDilog(true);
+    };
+
+    const handleCreateTeam = async () => {
+
+        try {
+            await addTeam({ name: newTeam, userId: userId });
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setOpenCreateTeamDialog(false);
+            setNewTeam('');
+            currentDilog === "AddTask" ? setOpenAddTaskDilog(true) : setOpenUpdateTeamDilog(true);
+        }
+
+    };
+
+    const handleError = (error) => {
+        if (error.response) {
+            const { status } = error.response;
+            if (status === 401) {
+                alert('Unauthorized');
+            } else {
+                alert('An error occurred while processing your request. Please try again later.');
+            }
+        } else if (error.request) {
+            alert('Network Error: Please check your internet connection.');
+        } else {
+            alert('An error occurred. Please try again later.');
+        }
+    };
 
     return (
         <Dialog
             open={openAddTeamDialog}
-            onClose={handleAddTeamDialogClose}
+            onClose={handleCreateTeamDialogClose}
             className={`addCommentDilogContainer ${theme === 'light' ? 'light' : 'dark'}`}
         >
             <div className='addCommentDilog' >
@@ -37,10 +86,10 @@ function AddTeamDilog({ openAddTeamDialog, handleAddTeamDialogClose, handleAddTe
             </div>
 
             <DialogActions className='dialogAction'>
-                <Button variant="outlined" autoFocus onClick={handleAddTeamDialogClose} className='dialogButton' >
+                <Button variant="outlined" autoFocus onClick={handleCreateTeamDialogClose} className='dialogButton' >
                     Cancel
                 </Button>
-                <Button variant="outlined" onClick={handleAddTeam} className='dialogButton' >Add Team/Group</Button>
+                <Button variant="outlined" onClick={handleCreateTeam} className='dialogButton' >Create Team/Group</Button>
             </DialogActions>
         </Dialog>
     );

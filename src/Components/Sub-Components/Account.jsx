@@ -10,7 +10,7 @@ import useAlert from '../../Hooks/UseAlert';
 import { UseDeleteAccount } from '../../Hooks/UseDeleteAccount';
 import { useNavigate } from 'react-router-dom';
 
-function Account({ openAccountDialog, setOpenAccountDilog }) {
+function Account({ openAccountDialog, setOpenAccountDilog, handleDeleteAccount }) {
 
     const theme = useSelector(state => state.theme.theme);
 
@@ -128,19 +128,6 @@ function Account({ openAccountDialog, setOpenAccountDilog }) {
             alert('An error occurred. Please try again later.');
         }
     };
-
-    const handleDeleteAccount = async () => {
-
-        try {
-            await deleteAccount();
-            dispatch({ type: 'SET_TOKEN', payload: null });
-            dispatch({ type: 'SET_USER', payload: null });
-            navigate('/login');
-        } catch (error) {
-            handleError(error);
-        }
-
-    }
 
     useEffect(() => {
         if (openAccountDialog) {
