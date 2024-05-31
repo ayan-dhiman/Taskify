@@ -16,9 +16,20 @@
       body{
         margin: 0px;
         user-select: none;
-        background-color: black;
         font-family: Raleway;
+        overflow-x: scroll;
       }
+
+      body::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        /* background: transparent; */
+      }
+
+      body {
+        -ms-overflow-style: none;
+      }
+
     </style>
   </head>
   <body>
