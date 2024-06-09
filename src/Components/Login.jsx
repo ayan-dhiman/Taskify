@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button, LinearProgress } from '@mui/material';
+import { Alert, Button, LinearProgress } from '@mui/material';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 import { UseLogin } from '../Hooks/UseLogin';
 import useAlert from '../Hooks/UseAlert';
@@ -115,6 +116,8 @@ function Login() {
                     backgroundColor: (theme === 'light' ? '#2a91eb' : '#5a4c8d')
                 }
             }} />}
+            <Alert severity="warning" className='warning' >TASKIFY is hosted on a shared server. As a result, it may take a moment for the initial action to respond. After that, you can expect a smoother experience. Thank you for your patience and understanding.</Alert>
+
             <ContrastOutlinedIcon className='themeIcon' onClick={handleTheme} />
 
             <div className={`logindiv ${theme}`}>
