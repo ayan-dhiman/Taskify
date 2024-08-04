@@ -129,6 +129,22 @@ function Account({ openAccountDialog, setOpenAccountDilog, handleDeleteAccount }
         }
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSaveChanges();
+        }
+        if (event.key === 'Escape' ) {
+            handleAccountDilogClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [userName, userEmail]);
+
     useEffect(() => {
         if (openAccountDialog) {
             setUserName(loggedUser.name);

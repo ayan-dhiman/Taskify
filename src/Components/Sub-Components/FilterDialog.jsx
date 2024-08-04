@@ -55,7 +55,7 @@ function FilterDialog({ openFilterDialog, setOpenFilterDialog, teams, handleFilt
                     <div className="date">
 
                         <select
-                            className='select'
+                            className='select condition'
                             value={filterDateCondition}
                             onChange={(e) => setFilterDateCondition(e.target.value)}
                         >
@@ -144,9 +144,12 @@ function FilterDialog({ openFilterDialog, setOpenFilterDialog, teams, handleFilt
                         }}
                         sx={{
                             '& .MuiChip-root': {
-                                color: theme === 'light' ? 'black' : 'white',
+                                color: theme === 'light' ? 'red' : 'red',
                                 fontSize: "12px",
                                 backgroundColor: "transparent"
+                            },
+                            '.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
+                                color: 'red'
                             },
                             '& .MuiOutlinedInput-notchedOutline': {
                                 border: theme === 'light' ? '1px solid black !important ' : '1px solid white !important ',

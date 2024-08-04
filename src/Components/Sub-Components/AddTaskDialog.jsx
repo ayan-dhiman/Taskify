@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddTaskDialog.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -90,6 +90,22 @@ function AddTaskDialog({ open, setOpenAddTaskDilog, handleCreateTeamDialogOpen, 
             alert('An error occurred. Please try again later.');
         }
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleAddTask();
+        }
+        if (event.key === 'Escape' ) {
+            handleClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [task, team, comment, link]);
 
     return (
         <Dialog
