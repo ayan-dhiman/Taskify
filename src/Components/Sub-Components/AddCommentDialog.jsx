@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, Button } from '@mui/material';
 import '../../Style/AddCommentDialog.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,6 +58,22 @@ function AddCommentDialog({ openCommentDialog, setOpenCommentDialog, taskId }) {
             alert('An error occurred. Please try again later.');
         }
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleAddComment();
+        }
+        if (event.key === 'Escape' ) {
+            handleCommentDialogClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [updatedComment]);
 
     return (
         <Dialog

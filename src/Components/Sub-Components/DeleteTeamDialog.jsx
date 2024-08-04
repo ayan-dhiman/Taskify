@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogActions, Button, Select, MenuItem, Chip } from '@mui/material';
 import '../../Style/DeleteTeamDialog.scss';
 import { useSelector } from 'react-redux';
@@ -10,6 +10,22 @@ function AddTeamDialog({ openDeleteTeamDialog, handleDeleteTeamDialogClose, hand
     const handleTeamSelection = (event) => {
         setSelectedTeams(event.target.value);
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            //handleDeleteTeams();
+        }
+        if (event.key === 'Escape' ) {
+            handleDeleteTeamDialogClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [selectedTeams]);
 
     return (
         <Dialog

@@ -15,11 +15,13 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
+import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 
 import '../Style/DashboardStyle.scss';
 import Account from './Sub-Components/Account';
 import SecurityPassword from './Sub-Components/SecurityPassword';
 import AccountDelConfirmation from './Sub-Components/AccountDelConfirmation';
+import Suggestion from './Sub-Components/Suggestion';
 
 function Dashboard() {
   const loggedUser = useSelector(state => state.auth.loggedUser.name);
@@ -32,6 +34,7 @@ function Dashboard() {
   const [openAccountDilog, setOpenAccountDilog] = useState(false);
   const [openSecurityDilog, setOpenSecurityDilog] = useState(false);
   const [accDelConfirmOpen, setAccDelConfirmOpen] = useState(false);
+  const [openSuggestionDilog, setOpenSuggestionDilog] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -107,7 +110,14 @@ function Dashboard() {
                 handleMenuClose();
               }} sx={menuItemStyle}>
                 <SettingsOutlinedIcon className='MenuItemIcon' />
-                Security
+                Password
+              </MenuItem>
+              <MenuItem onClick={() => {
+                setOpenSuggestionDilog(true);
+                handleMenuClose();
+              }} sx={menuItemStyle}>
+                <RateReviewOutlinedIcon className='MenuItemIcon' />
+                Suggestion
               </MenuItem>
               <MenuItem onClick={handleLogout} sx={{ ...menuItemStyle, '&:hover': { backgroundColor: '#ff000019' } }}>
                 <ExitToAppOutlinedIcon className='MenuItemIcon' />
@@ -143,6 +153,11 @@ function Dashboard() {
       <AccountDelConfirmation
         accDelConfirmOpen={accDelConfirmOpen}
         setAccDelConfirmOpen={setAccDelConfirmOpen}
+      />
+
+      <Suggestion
+        openSuggestionDialog={openSuggestionDilog}
+        setOpenSuggestionDialog={setOpenSuggestionDilog}
       />
 
     </div>

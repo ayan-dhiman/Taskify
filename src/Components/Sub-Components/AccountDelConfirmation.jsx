@@ -55,6 +55,22 @@ function AccountDelConfirmation({ accDelConfirmOpen, setAccDelConfirmOpen }) {
 
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleDeleteAccount();
+        }
+        if (event.key === 'Escape' ) {
+            handleADDilogClose();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
+
     return (
         <Dialog
             open={accDelConfirmOpen}
